@@ -1,0 +1,24 @@
+{
+  "ProjectName": "PsRol",
+  "Description": "PowerShell module for the OS2Rollekatalog API",
+  "Version": "0.1.0",
+  "copyResourcesToModuleRoot": false,
+  "Manifest": {
+    "Author": "Thomas Larsen",
+    "CompanyName": "Bornholms Regionskommune",
+    "Copyright": "Copyright (c) Bornholms Regionskommune. Licensed under the EUPL",
+    "PowerShellHostVersion": "7.6",
+    "GUID": "d6a2b186-b9a8-4a41-a516-13cbb4805c94",
+    "Tags": [],
+    "ProjectUri": ""
+  },
+  "Pester": {
+    "TestResult": {
+      "Enabled": true,
+      "OutputFormat": "NUnitXml"
+    },
+    "Output": {
+      "Verbosity": "Detailed"
+    }
+  }
+}

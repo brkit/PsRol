@@ -46,7 +46,7 @@ Set-RolConfiguration -BaseUrl 'https://kommune.rollekatalog.dk' -ApiKey '<ApiKey
 
 The module is created using [ModuleTools](https://github.com/belibug/ModuleTools) as a lightweight scaffolding tool for PowerShell modules, the module can be built by following the instructions below.
 
-### Prerequisites
+### Development Prerequisites
 
 - [Git](https://git-scm.com/)
 - [ModuleTools](https://www.powershellgallery.com/packages/ModuleTools)

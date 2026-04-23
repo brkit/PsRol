@@ -21,7 +21,7 @@ function New-RolItSystem {
                     $wordToComplete,
                     $commandAst,
                     $fakeBoundParameters )
-                $domains = @('Administrativt', 'Skole') | Where-Object {$PSItem -Like "$wordToComplete*"}
+                $domains = @('Administrativt', 'Skole') | Where-Object { $PSItem -Like "$wordToComplete*" }
                 $domains | ForEach-Object { New-Object -Type System.Management.Automation.CompletionResult -ArgumentList @(
                         $PSItem
                         $PSItem
@@ -49,7 +49,7 @@ function New-RolItSystem {
         email                     = $null
         responsibleUserUuid       = $null
     }
-    if($ItSystemType -eq [PsRolItSystemType]::AD -And -not $Paused.IsPresent) {
+    if ($ItSystemType -eq [PsRolItSystemType]::AD -And -not $Paused.IsPresent) {
         Write-Warning -Message 'Systems of type ''AD'' are paused on creation'
     }
 

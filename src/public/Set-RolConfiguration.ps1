@@ -10,7 +10,7 @@ function Set-RolConfiguration {
         [switch]$ApiKeyInDotFile
     )
     begin {
-        if(-not ($Script:Configuration -is [hashtable])) {
+        if (-not ($Script:Configuration -is [hashtable])) {
             $Script:Configuration = @{}
         }
     }
@@ -32,11 +32,12 @@ function Set-RolConfiguration {
     }
     
     end {
-        if($AsDotFile.IsPresent) {
+        if ($AsDotFile.IsPresent) {
             $DotConfig = $Script:Configuration.Clone()
-            if($ApiKeyAsDotFile.IsPresent) {
+            if ($ApiKeyAsDotFile.IsPresent) {
                 Write-Warning 'ApiKey is stored in plaintext without protection. You have been warned.'
-            } else {
+            }
+            else {
                 $DotConfig.Remove('ApiKey')
             }
             $DotConfig | ConvertTo-Json | Out-File (Join-Path '~' '.PsRolConfig.json')

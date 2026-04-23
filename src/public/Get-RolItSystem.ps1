@@ -27,7 +27,7 @@ function Get-RolItSystem {
         $itSystems = $Response.PSWhere({ $PSItem.canEditThroughApi })
     }
 
-    if($null -ne $Name) {
+    if ($null -ne $Name) {
         $itSystems = $itSystems.PSWhere({ $PSItem.Name -match $Name })
     }
 

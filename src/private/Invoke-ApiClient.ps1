@@ -16,9 +16,9 @@ function Invoke-ApiClient {
     $RequestUri = $Configuration["BaseUrl"] + $Uri
 
     $Params = @{
-        Uri = $RequestUri
-        Method = $Method
-        Headers = @{'ApiKey' = $Configuration['ApiKey']}
+        Uri     = $RequestUri
+        Method  = $Method
+        Headers = @{'ApiKey' = $Configuration['ApiKey'] }
     }
     
     if ($null -ne $Body) {
@@ -30,9 +30,9 @@ function Invoke-ApiClient {
     
     $MediaType = [System.Net.Http.Headers.MediaTypeHeaderValue]::Parse($WebResponse.Headers.'Content-Type')
     switch ($MediaType.MediaType) {
-        'application/json' { return $WebResponse.Content | ConvertFrom-Json -Depth 10}
+        'application/json' { return $WebResponse.Content | ConvertFrom-Json -Depth 10 }
         'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' { 
-            if(-not ([String]::IsNullOrEmpty($OutFile))) {
+            if (-not ([String]::IsNullOrEmpty($OutFile))) {
                 [System.IO.File]::WriteAllBytes($OutFile, $WebResponse.RawContentStream.ToArray())
                 return $OutFile
             }

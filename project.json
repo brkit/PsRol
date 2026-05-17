@@ -1,7 +1,7 @@
 {
   "ProjectName": "PsRol",
   "Description": "PowerShell module for the OS2Rollekatalog API",
-  "Version": "0.1.0",
+  "Version": "0.2.0",
   "copyResourcesToModuleRoot": false,
   "Manifest": {
     "Author": "Thomas Larsen",

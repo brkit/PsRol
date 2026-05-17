@@ -38,17 +38,8 @@ function Add-RolItSystemRole {
 
         $Response = Invoke-ApiClient -Uri $ApiUrl -Method 'POST' -Body ($Body | ConvertTo-Json)
         
-        $ReturnObject = [PSCustomObject]@{
-            SystemId                 = $itSystemId
-            SystemRoleId             = $Response.Id
-            Name                     = $Response.Name
-            SystemRoleIdentifier     = $Response.Identifier
-            Description              = $Response.Description
-            Weight                   = $Response.Weight
-            SupportedConstraintTypes = $Response.SupportedConstraintTypes
-        }
-
-        $ReturnObject.PSObject.TypeNames.Insert(0, 'PsRol.SystemRole')
+        $ReturnObject = [PsRolSystemRole]::new($Response)
+        
         $DefaultDisplaySet = 'Name', 'SystemRoleIdentifier', 'Description'
         $DefaultDisplayPropertySet = New-Object System.Management.Automation.PSPropertySet('DefaultDisplayPropertySet', [string[]]$defaultDisplaySet)
         $PSStandardMembers = [System.Management.Automation.PSMemberInfo[]]@($defaultDisplayPropertySet)

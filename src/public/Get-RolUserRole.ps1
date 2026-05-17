@@ -19,7 +19,7 @@ function Get-RolUserRole {
                 Description = $UserRoleInResponse.description
             }
         }
-        return $UserRoles
+        return $UserRoles | Where-Object { $PSItem.Name -Like $Name }
     }
 
 }

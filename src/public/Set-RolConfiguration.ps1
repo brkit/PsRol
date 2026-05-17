@@ -34,7 +34,7 @@ function Set-RolConfiguration {
     end {
         if ($AsDotFile.IsPresent) {
             $DotConfig = $Script:Configuration.Clone()
-            if ($ApiKeyAsDotFile.IsPresent) {
+            if ($ApiKeyInDotFile.IsPresent) {
                 Write-Warning 'ApiKey is stored in plaintext without protection. You have been warned.'
             }
             else {

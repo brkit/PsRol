@@ -1,5 +1,5 @@
 # Copyright (c) Bornholms Regionskommune. Licensed under the EUPL
-function Add-RolUserRole {
+function New-RolUserRole {
     [CmdletBinding()]
     param (
         [Parameter(Mandatory = $true)]    
@@ -11,19 +11,29 @@ function Add-RolUserRole {
         [String]$ItSystemId,
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true)]
         [AllowEmptyCollection()]
-        [string[]]$SystemRoleId,
+        [PsRolSystemRoleAssignment[]]$SystemRoleAssignment,
         [switch]$SensitiveRole
     )
     
     process {
         $ApiUrl = '/api/v2/userrole'
+        $SystemRoles = Get-RolItSystemRole -itSystemId $ItSystemId
 
-        $systemRoleAssignments = @()
-        $systemRoleAssignments = $SystemRoleId.PSForEach({
+        $sra = @()
+        $sra = $SystemRoleAssignment.PSForEach({
                 [PSCustomObject]@{
-                    systemRoleId         = $PSItem
+                    systemRoleId         = $PSItem.SystemRoleId
                     systemRoleIdentifier = $null
-                    constraintValues     = @()
+                    constraintValues     = @( $PSItem.ConstraintValues.PSForEach({
+                                [PSCustomObject]@{
+                                    constraintTypeId       = $PSItem.ConstraintTypeId
+                                    constraintTypeEntityId = $PSItem.ConstraintTypeEntityId
+                                    constraintValueType    = $PSItem.constraintValueType
+                                    constraintValue        = $PSItem.ConstraintValue
+                                    constraintIdentifier   = $PSItem.ConstraintIdentifier
+                                    postponed              = $PSItem.Postponed
+                                } 
+                            }))
                 }
             })
 
@@ -35,12 +45,12 @@ function Add-RolUserRole {
             userOnly              = $false
             sensitiveRole         = $SensitiveRole.IsPresent
             itSystemId            = $ItSystemId
-            systemRoleAssignments = $systemRoleAssignments
+            systemRoleAssignments = $sra
             requesterPermission   = @('INHERIT')
             approverPermission    = @('INHERIT')  
         }
         
-        $Response = Invoke-ApiClient -Uri $ApiUrl -Method 'POST' -Body ($Body | ConvertTo-Json -Depth 3)
+        $Response = Invoke-ApiClient -Uri $ApiUrl -Method 'POST' -Body ($Body | ConvertTo-Json -Depth 5)
         return $Response
     
     }

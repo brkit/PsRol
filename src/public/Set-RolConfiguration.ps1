@@ -21,7 +21,7 @@ function Set-RolConfiguration {
             # validate URL
             $URL = $BaseUrl -as [System.URI]
             if (($null -eq $URL.AbsoluteURI -and $URL.Scheme -notmatch '^https$')) {
-                throw 'Invalid URL: ''$($BaseUrl)''. Only HTTPS is supported'
+                throw 'Invalid URL: ''{0}''. Only HTTPS is supported' -f $BaseUrl
             }
             $Script:Configuration["BaseUrl"] = $BaseUrl
         }

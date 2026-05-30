@@ -17,7 +17,7 @@ function Add-RolItSystemRole {
         $CheckApiUrlPart = '/api/v2/itsystem/{0}' -f $itSystemId
         
         try {
-            Invoke-ApiClient -Uri $CheckApiUrlPart -Method 'GET' -Body "" | Out-Null
+            Invoke-ApiClient -Uri $CheckApiUrlPart -Method 'GET' | Out-Null
         }
         catch {
             Throw $('It System with ItSystemId {0} not found.' -f $itSystemId)

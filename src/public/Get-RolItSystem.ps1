@@ -16,7 +16,7 @@ function Get-RolItSystem {
     }
     $ApiMethod = 'GET'
 
-    $Response = Invoke-ApiClient -Uri $ApiUrlPart -Method $ApiMethod -Body ""
+    $Response = Invoke-ApiClient -Uri $ApiUrlPart -Method $ApiMethod
     
     $ReturnObject = @()
     

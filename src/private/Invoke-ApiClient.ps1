@@ -6,8 +6,6 @@ function Invoke-ApiClient {
         [string]$Uri,
         [Parameter(Mandatory)]
         [string]$Method,
-        [Parameter(Mandatory)]
-        [AllowEmptyString()]
         [string]$Body,
         [string]$OutFile
     )
@@ -21,7 +19,7 @@ function Invoke-ApiClient {
         Headers = @{'ApiKey' = $Configuration['ApiKey'] }
     }
     
-    if ($null -ne $Body) {
+    if (-not [string]::IsNullOrEmpty($Body)) {
         $Params.Add('Body', $Body)
         $Params.Add('ContentType', 'application/json')
     }

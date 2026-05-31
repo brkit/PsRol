@@ -13,7 +13,7 @@ function Add-RolAssignUserRole {
         
         # By convention domain is either "Administrativt" or "Skole", but is not strictly bound to these values.
         # Creating an argument completer instead of an enum ensures tab-completion between the two conventional values, but doesn't cause validation so other values can be specified manually.
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $false)]
         [ArgumentCompleter( {
                 param ( $commandName,
                     $parameterName,
@@ -29,7 +29,8 @@ function Add-RolAssignUserRole {
                     )
                 }
             })]
-        [String]$Domain = 'Administrativt'
+        [String]$Domain = 'Administrativt',
+        [Switch]$AllowExtraAssignments
     )
     
     process {
@@ -39,7 +40,7 @@ function Add-RolAssignUserRole {
             startDate            = $StartDate.ToString('yyyy-MM-dd')
             stopDate             = $StopDate ? $StopDate.ToString('yyyy-MM-dd') : ""
             domain               = $Domain
-            onlyIfNotAssigned    = $false
+            onlyIfNotAssigned    = (-not $AllowExtraAssignments.IsPresent)
             postponedConstraints = @()
         }
 

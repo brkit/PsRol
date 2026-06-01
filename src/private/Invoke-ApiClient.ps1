@@ -24,18 +24,33 @@ function Invoke-ApiClient {
         $Params.Add('ContentType', 'application/json')
     }
     
-    $WebResponse = Invoke-WebRequest @Params
+    try {
+        $WebResponse = Invoke-WebRequest @Params
+    }
+    catch {
+        $ErrorBodyFromApi = $PSItem.ErrorDetails.Message | ConvertFrom-Json
+        $WriteError = @{
+            Message   = '{0} - {1} - {2}' -f $ErrorBodyFromApi.path, $ErrorBodyFromApi.status, ($ErrorBodyFromApi.error ?? 'null')
+            Exception = $PSItem.Exception
+        }
+        Write-Error @WriteError
+        return
+    }
+
+    $BinaryContentTypes = @('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/ms-excel')
     
     $MediaType = [System.Net.Http.Headers.MediaTypeHeaderValue]::Parse($WebResponse.Headers.'Content-Type')
     switch ($MediaType.MediaType) {
         'application/json' { return $WebResponse.Content | ConvertFrom-Json -Depth 10 }
-        { $PSItem -in @('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/ms-excel') } { 
+        { $PSItem -in $BinaryContentTypes } { 
             if (-not ([String]::IsNullOrEmpty($OutFile))) {
                 [System.IO.File]::WriteAllBytes($OutFile, $WebResponse.RawContentStream.ToArray())
                 return $OutFile
             }
             Write-Error -Message 'Received binary data, this must be saved using the OutFile parameter'
         }
-        Default {}
+        Default {
+            Write-Error -Message $('Unexceptected Media Type: {0}' -f $MediaType.MediaType) -Exception $([InvalidOperationException]::new($('Unexceptected Media Type: {0}' -f $MediaType.MediaType)))
+        }
     }
 }

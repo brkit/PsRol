@@ -1,16 +1,14 @@
 # Copyright (c) Bornholms Regionskommune. Licensed under the EUPL
 function Add-RolOrgUnitAssignUserRole {
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess)]
     param (
-        [Parameter(Mandatory = $true)]
-        [String]$UserRoleId,
-        [Parameter(Mandatory = $true)]
-        [String]$OrgUnitUuid,
-        [Parameter(Mandatory = $false)]
+        [Parameter(Mandatory)]
+        [string]$UserRoleId,
+        [Parameter(Mandatory)]
+        [string]$OrgUnitUuid,
         [DateTime]$StartDate = (Get-Date),
-        [Parameter(Mandatory = $false)]
         [DateTime]$StopDate,
-        [Switch]$Inherit
+        [switch]$Inherit
     )
     
     process {
@@ -30,7 +28,9 @@ function Add-RolOrgUnitAssignUserRole {
             }
         }
         
-        Invoke-ApiClient -Uri $ApiUrl -Method 'Post' -Body ($Request | ConvertTo-Json)
+        if ($PSCmdlet.ShouldProcess("UserRole '$UserRoleId' => OrgUnit '$OrgUnitUuid'", 'Assign')) {
+            Invoke-ApiClient -Uri $ApiUrl -Method 'POST' -Body ($Request | ConvertTo-Json)
+        }
     }
 
 }

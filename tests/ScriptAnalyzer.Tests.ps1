@@ -1,5 +1,5 @@
 BeforeDiscovery {
-    $files = Get-ChildItem -Path .\src -Filter '*.ps1' -Recurse
+    $files = Get-ChildItem -Path .\src -Filter '*.ps1' -Recurse -Exclude '*.tests.ps1'
 }
 BeforeAll {
     $ScriptAnalyzerSettings = @{
@@ -7,6 +7,8 @@ BeforeAll {
         Severity            = @('Warning', 'Error')
         ExcludeRules        = @()
     }
+
+    Import-Module 'PSScriptAnalyzer'
 }
 Describe 'File: <_.name>' -ForEach $files {
     Context 'Code Quality Check' {

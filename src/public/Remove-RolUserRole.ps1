@@ -1,15 +1,22 @@
 # Copyright (c) Bornholms Regionskommune. Licensed under the EUPL
 function Remove-RolUserRole {
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess, ConfirmImpact = 'High')]
     param (
-        [Parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true)]
-        [String]$UserRoleId
+        [Parameter(ValueFromPipelineByPropertyName)]
+        [string]$UserRoleId
     )
     
     process {
         $ApiUrl = '/api/v2/userrole/{0}' -f $UserRoleId
+        
+        $UserRoleToDelete = Invoke-ApiClient -Uri $ApiUrl -Method 'GET'
+        if ($null -eq $UserRoleToDelete) {
+            throw "UserRole '$UserRoleId' not found."
+        }
 
-        Invoke-ApiClient -Uri $ApiUrl -Method 'DELETE'
+        if ($PSCmdlet.ShouldProcess("UserRole: '$($UserRoleToDelete.Name) ($UserRoleId)'", 'Delete')) {
+            Invoke-ApiClient -Uri $ApiUrl -Method 'DELETE'
+        }
     }
 
 }

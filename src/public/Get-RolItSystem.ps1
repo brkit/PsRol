@@ -1,25 +1,23 @@
 # Copyright (c) Bornholms Regionskommune. Licensed under the EUPL
 function Get-RolItSystem {
     [CmdletBinding()]
+    [OutputType([PsRolItSystem])]
     param (
-        [string]$itSystemId,
+        [string]$ItSystemId,
         [string]$Name,
         [string]$Identifier,
         [switch]$All
     )
 
-    if ($null -ne $itSystemId) {
-        $ApiUrlPart = '/api/v2/itsystem/' + $itSystemId
+    if (-not [string]::IsNullOrEmpty($ItSystemId)) {
+        $ApiUrlPart = '/api/v2/itsystem/' + $ItSystemId
     }
     else {
         $ApiUrlPart = '/api/v2/itsystem'
     }
-    $ApiMethod = 'GET'
 
-    $Response = Invoke-ApiClient -Uri $ApiUrlPart -Method $ApiMethod
-    
-    $ReturnObject = @()
-    
+    $Response = Invoke-ApiClient -Uri $ApiUrlPart -Method 'GET'
+
     if ($All.IsPresent) { 
         $itSystems = $Response
     }
@@ -27,40 +25,19 @@ function Get-RolItSystem {
         $itSystems = $Response.PSWhere({ $PSItem.canEditThroughApi })
     }
 
-    if ($null -ne $Name) {
+    if (-not [string]::IsNullOrEmpty($Name)) {
         $itSystems = $itSystems.PSWhere({ $PSItem.Name -match $Name })
     }
 
-    if ($null -ne $Identifier) {
+    if (-not [string]::IsNullOrEmpty($Identifier)) {
         $itSystems = $itSystems.PSWhere({ $PSItem.identifier -match $Identifier })
     }
 
-    foreach ($itSystem in $itSystems) { 
-        $ReturnObject += [PSCustomObject]@{
-            ItSystemId     = $itSystem.Id
-            Name           = $itSystem.name
-            Identifier     = $itSystem.identifier
-            SystemType     = $itSystem.systemtype
-            Paused         = $itSystem.paused
-            Hidden         = $itSystem.hidden
-            ReadOnly       = $itSystem.readonly
-            ApiMaintanable = $itSystem.canEditThroughApi
-            Deleted        = $itSystem.deleted
-            #AccesBlocked = $itSystem.accesBlocked
-            #apiManagedRoleAssignments = $itSystem.apiManagedRoleAssignments
-            Domain         = $itSystem.domain
-            Email          = $itSystem.email
-            #responsibleUserUuid = $itSystem.responsibleUserUuid
-        }
+    $ReturnObject = foreach ($itSystem in $itSystems) { 
+        [PsRolItSystem]::new($itSystem)
     }
-    
-    if ($ReturnObject.Count -gt 1) {
-        $ReturnObject.PSObject.TypeNames.Insert(0, 'PsRol.ItSystem')
-        $DefaultDisplaySet = 'ItSystemId', 'Name', 'Identifier', 'SystemType'
-        $DefaultDisplayPropertySet = New-Object System.Management.Automation.PSPropertySet('DefaultDisplayPropertySet', [string[]]$defaultDisplaySet)
-        $PSStandardMembers = [System.Management.Automation.PSMemberInfo[]]@($defaultDisplayPropertySet)
-        $ReturnObject | Add-Member MemberSet PSStandardMembers $PSStandardMembers
-    }
+
+    Set-DefaultDisplayPropertySet -InputObject $ReturnObject -Properties 'ItSystemId', 'Name', 'Identifier', 'SystemType'
 
     return $ReturnObject
 }

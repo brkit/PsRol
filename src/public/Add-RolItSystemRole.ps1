@@ -1,30 +1,29 @@
 # Copyright (c) Bornholms Regionskommune. Licensed under the EUPL
 function Add-RolItSystemRole {
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess)]
+    [OutputType([PsRolSystemRole])]
     param (
-        [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true)]
-        [string]$itSystemId,
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory, ValueFromPipelineByPropertyName)]
+        [string]$ItSystemId,
+        [Parameter(Mandatory)]
         [string]$Name,
-        [Parameter(Mandatory = $True)]
+        [Parameter(Mandatory)]
         [string]$Identifier,
-        [Parameter(Mandatory = $false)]
         [string]$Description,
-        [Parameter(Mandatory = $false)]
-        [string]$Weight = 1
+        [int]$Weight = 1
     )
     process {
-        $CheckApiUrlPart = '/api/v2/itsystem/{0}' -f $itSystemId
+        $CheckApiUrlPart = '/api/v2/itsystem/{0}' -f $ItSystemId
         
         try {
             Invoke-ApiClient -Uri $CheckApiUrlPart -Method 'GET' | Out-Null
         }
         catch {
-            Throw $('It System with ItSystemId {0} not found.' -f $itSystemId)
+            throw $('It System with ItSystemId {0} not found.' -f $ItSystemId)
         }
         
         $ApiQueryParams = $('?AdGroupType={0}&universal={1}' -f 'NONE', 'false')
-        $ApiUrlPart = $('/api/v2/itsystem/{0}/systemroles' -f $itSystemId)
+        $ApiUrlPart = $('/api/v2/itsystem/{0}/systemroles' -f $ItSystemId)
         $ApiUrl = $ApiUrlPart + $ApiQueryParams
 
         $Body = [PSCustomObject]@{
@@ -36,15 +35,14 @@ function Add-RolItSystemRole {
             supportedConstraintTypes = @()
         }
 
-        $Response = Invoke-ApiClient -Uri $ApiUrl -Method 'POST' -Body ($Body | ConvertTo-Json)
+        if ($PSCmdlet.ShouldProcess("SystemRole '$Name' on ItSystem '$ItSystemId'", 'Create')) {
+            $Response = Invoke-ApiClient -Uri $ApiUrl -Method 'POST' -Body ($Body | ConvertTo-Json)
         
-        $ReturnObject = [PsRolSystemRole]::new($Response)
+            $ReturnObject = [PsRolSystemRole]::new($Response)
         
-        $DefaultDisplaySet = 'Name', 'SystemRoleIdentifier', 'Description'
-        $DefaultDisplayPropertySet = New-Object System.Management.Automation.PSPropertySet('DefaultDisplayPropertySet', [string[]]$defaultDisplaySet)
-        $PSStandardMembers = [System.Management.Automation.PSMemberInfo[]]@($defaultDisplayPropertySet)
-        $ReturnObject | Add-Member MemberSet PSStandardMembers $PSStandardMembers
+            Set-DefaultDisplayPropertySet -InputObject $ReturnObject -Properties 'Name', 'SystemRoleIdentifier', 'Description'
 
-        return $ReturnObject
+            return $ReturnObject
+        }
     }
 }

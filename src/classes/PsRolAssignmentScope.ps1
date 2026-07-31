@@ -2,11 +2,16 @@
 class PsRolAssignmentScope {
     [PsRolAssignmentScopeType]$type
     [PsRolTitle[]]$titles
+    [bool]$manager
+    [bool]$substitute
+    [string[]]$functions
+    [PsRolTitle[]]$excludedTitles
+    [PsRolUser[]]$exceptedUsers
 
     PsRolAssignmentScope() {}
     
     PsRolAssignmentScope($Type, $Titles) {
-        $this.Type = $Type
-        $this.Titles = $Titles
+        $this.type = $Type
+        $this.titles = $Titles
     }
 }

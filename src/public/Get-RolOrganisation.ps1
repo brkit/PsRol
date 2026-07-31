@@ -1,8 +1,9 @@
 # Copyright (c) Bornholms Regionskommune. Licensed under the EUPL
 function Get-RolOrganisation {
     [CmdletBinding()]
+    [OutputType([PsRolOrganisation])]
     param (
-        [Parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true)]
+        [Parameter(ValueFromPipelineByPropertyName)]
         [string]$Name
     )
 

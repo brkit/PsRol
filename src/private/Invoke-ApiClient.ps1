@@ -9,14 +9,20 @@ function Invoke-ApiClient {
         [string]$Body,
         [string]$OutFile
     )
+    
+    if (-not $Script:Configuration) {
+        Get-RolConfiguration | Out-Null
+    }
 
-    $Configuration = Get-RolConfiguration
-    $RequestUri = $Configuration["BaseUrl"] + $Uri
+    if (-not $Script:Configuration['ApiKey'] -or -not $Script:Configuration['BaseUrl']) {
+        throw 'PsRol is not configured. Run Set-RolConfiguration first.'
+    }
+    $RequestUri = $Script:Configuration['BaseUrl'] + $Uri
 
     $Params = @{
         Uri     = $RequestUri
         Method  = $Method
-        Headers = @{'ApiKey' = $Configuration['ApiKey'] }
+        Headers = @{'ApiKey' = $Script:Configuration['ApiKey'] }
     }
     
     if (-not [string]::IsNullOrEmpty($Body)) {
@@ -24,16 +30,33 @@ function Invoke-ApiClient {
         $Params.Add('ContentType', 'application/json')
     }
     
+    $Body | Write-Debug
+
     try {
         $WebResponse = Invoke-WebRequest @Params
     }
-    catch {
+    # Catch HTTP responses explicitly
+    catch [Microsoft.PowerShell.Commands.HttpResponseException] {
+        
+        # If Not Found (404), return $null. This will be handled by the calling function
+        if ($PSItem.Exception.Response.StatusCode -eq [System.Net.HttpStatusCode]::NotFound) {
+            return
+        }
+
+        # Convert the JSON Error Body from the API to an object
         $ErrorBodyFromApi = $PSItem.ErrorDetails.Message | ConvertFrom-Json
+
+        # Create the error object
         $WriteError = @{
             Message   = '{0} - {1} - {2}' -f $ErrorBodyFromApi.path, $ErrorBodyFromApi.status, ($ErrorBodyFromApi.error ?? 'null')
             Exception = $PSItem.Exception
         }
         Write-Error @WriteError
+        return
+    }
+    # Catch all other exceptions
+    catch {
+        Write-Error -Message $PSItem.Exception.Message -Exception $PSItem.Exception
         return
     }
 
@@ -50,7 +73,7 @@ function Invoke-ApiClient {
             Write-Error -Message 'Received binary data, this must be saved using the OutFile parameter'
         }
         Default {
-            Write-Error -Message $('Unexceptected Media Type: {0}' -f $MediaType.MediaType) -Exception $([InvalidOperationException]::new($('Unexceptected Media Type: {0}' -f $MediaType.MediaType)))
+            Write-Error -Message $('Unexpected Media Type: {0}' -f $MediaType.MediaType) -Exception $([InvalidOperationException]::new($('Unexpected Media Type: {0}' -f $MediaType.MediaType)))
         }
     }
 }

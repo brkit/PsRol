@@ -15,7 +15,6 @@ class PsRolSystemRole {
         $this.SystemRoleIdentifier = $obj.identifier
         $this.Description = $obj.description
         $this.Weight = $obj.weight
-        #$this.SupportedConstraintTypes = $obj.supportedConstraintTypes
         if ($obj.supportedConstraintTypes) {
             $this.SupportedConstraintTypes = foreach ($supportedConstraintType in $obj.supportedConstraintTypes) { [PsRolSupportedConstraintTypes]::new($supportedConstraintType) }
         }

@@ -1,18 +1,17 @@
 # Copyright (c) Bornholms Regionskommune. Licensed under the EUPL
 function Get-RolUserRole {
     [CmdletBinding()]
+    [OutputType([PSCustomObject])]
     param (
-        [Parameter(Mandatory = $false)]
         [AllowEmptyString()]
-        [String]$Name
+        [string]$Name
     )
     
     process {
         $ApiUrl = '/api/v2/userrole'
 
-        $Response = Invoke-ApiClient -Uri $ApiUrl -Method 'GET' -Body ($Body | ConvertTo-Json -Depth 3)
-        $UserRoles = @()
-        $UserRoles += foreach ($UserRoleInResponse in $Response) {
+        $Response = Invoke-ApiClient -Uri $ApiUrl -Method 'GET'
+        $UserRoles = foreach ($UserRoleInResponse in $Response) {
             [PSCustomObject]@{
                 UserRoleId  = $UserRoleInResponse.id
                 Name        = $UserRoleInResponse.Name

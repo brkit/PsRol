@@ -1,18 +1,15 @@
 # Copyright (c) Bornholms Regionskommune. Licensed under the EUPL
 function Add-RolOrgUnitAssignUserGroup {
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess)]
     param (
-        [Parameter(Mandatory = $true)]
-        [String]$RoleGroupId,
-        [Parameter(Mandatory = $true)]
-        [String]$OrgUnitUuid,
-        [Parameter(Mandatory = $false)]
+        [Parameter(Mandatory)]
+        [string]$RoleGroupId,
+        [Parameter(Mandatory)]
+        [string]$OrgUnitUuid,
         [DateTime]$StartDate = (Get-Date),
-        [Parameter(Mandatory = $false)]
         [DateTime]$StopDate,
-        [Parameter(Mandatory = $false)]
         [PsRolAssignmentScope[]]$Scope,
-        [Switch]$Inherit
+        [switch]$Inherit
     )
     
     process {
@@ -32,8 +29,10 @@ function Add-RolOrgUnitAssignUserGroup {
             }
         }
         
-        # Use -EnumAsStrings or the enum gets translated to its integer representation
-        Invoke-ApiClient -Uri $ApiUrl -Method 'Post' -Body ($Request | ConvertTo-Json -EnumsAsStrings -Depth 4)
+        # Use -EnumsAsStrings or the enum gets translated to its integer representation
+        if ($PSCmdlet.ShouldProcess("RoleGroup '$RoleGroupId' => OrgUnit '$OrgUnitUuid'", 'Assign')) {
+            Invoke-ApiClient -Uri $ApiUrl -Method 'POST' -Body ($Request | ConvertTo-Json -EnumsAsStrings -Depth 4)
+        }
     }
 
 }

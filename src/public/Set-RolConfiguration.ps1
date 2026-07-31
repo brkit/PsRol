@@ -1,6 +1,6 @@
 # Copyright (c) Bornholms Regionskommune. Licensed under the EUPL
 function Set-RolConfiguration {
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess, ConfirmImpact = 'Low')]
     param (
         [Parameter(Mandatory)]
         [string]$BaseUrl,
@@ -15,32 +15,35 @@ function Set-RolConfiguration {
         }
     }
     process {
-        
-        
-        If ($BaseUrl) {
+        if ($BaseUrl) {
             # validate URL
             $URL = $BaseUrl -as [System.URI]
-            if (($null -eq $URL.AbsoluteURI -and $URL.Scheme -notmatch '^https$')) {
+            if ($null -eq $URL.AbsoluteURI -or $URL.Scheme -ne 'https') {
                 throw 'Invalid URL: ''{0}''. Only HTTPS is supported' -f $BaseUrl
             }
-            $Script:Configuration["BaseUrl"] = $BaseUrl
         }
 
-        If ($ApiKey) {
-            $Script:Configuration['ApiKey'] = $ApiKey
+        $Target = if ($AsDotFile) { 
+            (Join-Path '~' '.PsRolConfig.json') 
         }
-    }
-    
-    end {
-        if ($AsDotFile.IsPresent) {
-            $DotConfig = $Script:Configuration.Clone()
-            if ($ApiKeyInDotFile.IsPresent) {
-                Write-Warning 'ApiKey is stored in plaintext without protection. You have been warned.'
+        else {
+            'Session Configuration'
+        }
+
+        if ($PSCmdlet.ShouldProcess($Target, 'Set BaseUrl and ApiKey')) {
+            $Script:Configuration['BaseUrl'] = $BaseUrl
+            $Script:Configuration['ApiKey'] = $ApiKey
+
+            if ($AsDotFile.IsPresent) {
+                $DotConfig = $Script:Configuration.Clone()
+                if ($ApiKeyInDotFile.IsPresent) {
+                    Write-Warning 'ApiKey is stored in plaintext without protection. You have been warned.'
+                }
+                else {
+                    $DotConfig.Remove('ApiKey')
+                }
+                $DotConfig | ConvertTo-Json | Out-File (Join-Path '~' '.PsRolConfig.json')
             }
-            else {
-                $DotConfig.Remove('ApiKey')
-            }
-            $DotConfig | ConvertTo-Json | Out-File (Join-Path '~' '.PsRolConfig.json')
         }
     }
 }

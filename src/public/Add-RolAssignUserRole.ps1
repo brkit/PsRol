@@ -1,36 +1,16 @@
-# Copyright (c) Bornholms Regionskommune. Licensed under the EUPL
+﻿# Copyright (c) Bornholms Regionskommune. Licensed under the EUPL
 function Add-RolAssignUserRole {
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess)]
     param (
-        [Parameter(Mandatory = $true)]
-        [String]$UserRoleId,
-        [Parameter(Mandatory = $true)]
-        [String]$UserId,
-        [Parameter(Mandatory = $false)]
+        [Parameter(Mandatory)]
+        [string]$UserRoleId,
+        [Parameter(Mandatory)]
+        [string]$UserId,
         [DateTime]$StartDate = (Get-Date),
-        [Parameter(Mandatory = $false)]
-        [DateTime]$StopDate,
-        
+        [DateTime]$StopDate,        
         # By convention domain is either "Administrativt" or "Skole", but is not strictly bound to these values.
-        # Creating an argument completer instead of an enum ensures tab-completion between the two conventional values, but doesn't cause validation so other values can be specified manually.
-        [Parameter(Mandatory = $false)]
-        [ArgumentCompleter( {
-                param ( $commandName,
-                    $parameterName,
-                    $wordToComplete,
-                    $commandAst,
-                    $fakeBoundParameters )
-                $domains = @('Administrativt', 'Skole') | Where-Object { $PSItem -Like "$wordToComplete*" }
-                $domains | ForEach-Object { New-Object -Type System.Management.Automation.CompletionResult -ArgumentList @(
-                        $PSItem
-                        $PSItem
-                        'ParameterValue'
-                        $PSItem
-                    )
-                }
-            })]
-        [String]$Domain = 'Administrativt',
-        [Switch]$AllowExtraAssignments
+        [string]$Domain = 'Administrativt',
+        [switch]$AllowExtraAssignments
     )
     
     process {
@@ -44,7 +24,9 @@ function Add-RolAssignUserRole {
             postponedConstraints = @()
         }
 
-        Invoke-ApiClient -Uri $ApiUrl -Method 'PUT' -Body ($Request | ConvertTo-Json)
+        if ($PSCmdlet.ShouldProcess("User '$UserId' => UserRole '$UserRoleId'", 'Assign')) {
+            Invoke-ApiClient -Uri $ApiUrl -Method 'PUT' -Body ($Request | ConvertTo-Json)
+        }
     }
 
 }

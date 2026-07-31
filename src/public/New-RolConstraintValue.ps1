@@ -1,13 +1,15 @@
 # Copyright (c) Bornholms Regionskommune. Licensed under the EUPL
 function New-RolConstraintValue {
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions', '', Justification='Cmdlet does not modify system state')]
     [CmdletBinding()]
+    [OutputType([PsRolConstraintValue])]
     param (
-        [Parameter(Mandatory = $true, ParameterSetName = 'ConstraintTypeId')]
+        [Parameter(Mandatory, ParameterSetName = 'ConstraintTypeId')]
         [string]$ConstraintTypeId,
-        [Parameter(Mandatory = $true, ParameterSetName = 'ConstraintTypeEntityId')]
+        [Parameter(Mandatory, ParameterSetName = 'ConstraintTypeEntityId')]
         [string]$ConstraintTypeEntityId,
-        [Parameter(Mandatory = $true, ParameterSetName = 'ConstraintTypeEntityId')]
-        [Parameter(Mandatory = $true, ParameterSetName = 'ConstraintTypeId')]
+        [Parameter(Mandatory, ParameterSetName = 'ConstraintTypeEntityId')]
+        [Parameter(Mandatory, ParameterSetName = 'ConstraintTypeId')]
         [string]$ConstraintValue
     )
 

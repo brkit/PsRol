@@ -1,22 +1,21 @@
 # Copyright (c) Bornholms Regionskommune. Licensed under the EUPL
 function Get-RolTitle {
     [CmdletBinding()]
+    [OutputType([PsRolTitle])]
     param (
-        [Parameter(Mandatory = $false)]
         [AllowEmptyString()]
-        [String]$Name
+        [string]$Name
     )
     
     process {
         $ApiUrl = '/api/title'
 
-        $TitleResponse = Invoke-ApiClient -Uri $ApiUrl -Method 'GET' -Body ($Body | ConvertTo-Json -Depth 3)
-        $Titles = @()
-        $Titles += foreach ($TitleInResponse in $TitleResponse) {
+        $TitleResponse = Invoke-ApiClient -Uri $ApiUrl -Method 'GET'
+        $Titles = foreach ($TitleInResponse in $TitleResponse) {
             [PsRolTitle]::new($TitleInResponse)
         }
         
-        if ([String]::IsNullOrWhiteSpace($Name)) {
+        if ([string]::IsNullOrWhiteSpace($Name)) {
             return $Titles
         }
         else {

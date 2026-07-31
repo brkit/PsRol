@@ -1,15 +1,15 @@
 # Copyright (c) Bornholms Regionskommune. Licensed under the EUPL
 function New-RolUserRole {
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess)]
     param (
-        [Parameter(Mandatory = $true)]    
-        [String]$Name,
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory)]    
+        [string]$Name,
+        [Parameter(Mandatory)]
         [AllowEmptyString()]
-        [String]$Description,
-        [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true)]
-        [String]$ItSystemId,
-        [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true)]
+        [string]$Description,
+        [Parameter(Mandatory, ValueFromPipelineByPropertyName)]
+        [string]$ItSystemId,
+        [Parameter(Mandatory, ValueFromPipelineByPropertyName)]
         [AllowEmptyCollection()]
         [PsRolSystemRoleAssignment[]]$SystemRoleAssignment,
         [switch]$SensitiveRole
@@ -17,7 +17,6 @@ function New-RolUserRole {
     
     process {
         $ApiUrl = '/api/v2/userrole'
-        $SystemRoles = Get-RolItSystemRole -itSystemId $ItSystemId
 
         $sra = @()
         $sra = $SystemRoleAssignment.PSForEach({
@@ -50,8 +49,10 @@ function New-RolUserRole {
             approverPermission    = @('INHERIT')  
         }
         
-        $Response = Invoke-ApiClient -Uri $ApiUrl -Method 'POST' -Body ($Body | ConvertTo-Json -Depth 5)
-        return $Response
+        if ($PSCmdlet.ShouldProcess("UserRole '$Name' on ItSystem '$ItSystemId'", 'Create')) {
+            $Response = Invoke-ApiClient -Uri $ApiUrl -Method 'POST' -Body ($Body | ConvertTo-Json -Depth 5)
+            return $Response
+        }
     
     }
 

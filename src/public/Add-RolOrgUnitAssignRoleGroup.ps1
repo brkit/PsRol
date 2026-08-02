@@ -1,5 +1,5 @@
 # Copyright (c) Bornholms Regionskommune. Licensed under the EUPL
-function Add-RolOrgUnitAssignUserGroup {
+function Add-RolOrgUnitAssignRoleGroup {
     [CmdletBinding(SupportsShouldProcess)]
     param (
         [Parameter(Mandatory)]

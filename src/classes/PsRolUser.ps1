@@ -14,4 +14,8 @@ class PsRolUser {
         $this.ExtUuid = [guid]$obj.extUuid
         $this.Name = $obj.name
     }
+
+    [string] ToString() {
+        return '{0} ({1})' -f $this.Name, $this.UserId
+    }
 }

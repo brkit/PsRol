@@ -9,4 +9,8 @@ class PsRolOrganisation {
         $this.Name = $obj.name
         $this.Uuid = $obj.uuid
     }
+
+    [string] ToString() {
+        return $this.Name
+    }
 }

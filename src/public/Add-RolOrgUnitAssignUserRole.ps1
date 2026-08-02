@@ -8,6 +8,7 @@ function Add-RolOrgUnitAssignUserRole {
         [string]$OrgUnitUuid,
         [DateTime]$StartDate = (Get-Date),
         [DateTime]$StopDate,
+        [PsRolAssignmentScope[]]$Scope,
         [switch]$Inherit
     )
     
@@ -17,7 +18,7 @@ function Add-RolOrgUnitAssignUserRole {
         $Request = [PSCustomObject]@{
             assignmentType = "USER_ROLE"
             inherit        = $Inherit.IsPresent
-            scopes         = $null
+            scopes         = $Scope
             startDate      = $StartDate.ToString('yyyy-MM-dd')
             stopDate       = $StopDate ? $StopDate.ToString('yyyy-MM-dd') : ""
             orgUnit        = [PSCustomObject]@{

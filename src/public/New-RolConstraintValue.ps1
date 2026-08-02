@@ -1,6 +1,6 @@
 # Copyright (c) Bornholms Regionskommune. Licensed under the EUPL
 function New-RolConstraintValue {
-    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions', '', Justification='Cmdlet does not modify system state')]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions', '', Justification = 'Cmdlet does not modify system state')]
     [CmdletBinding()]
     [OutputType([PsRolConstraintValue])]
     param (

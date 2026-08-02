@@ -15,6 +15,10 @@ class PsRolConstraintValue {
         $this.ConstraintIdentifier = $obj.constraintIdentifier
         $this.Postponed = $obj.postponed
     }
+
+    [string] ToString() {
+        return $this.ConstraintValue
+    }
 }
 
 class PsRolConstraintValueInput {

@@ -2,19 +2,16 @@
 class PsRolSystemRoleAssignment {
     [string]$SystemRoleId
     [string]$SystemRoleIdentifier
-    [System.Collections.Generic.List[PsRolConstraintValue]]$ConstraintValues
+    [PsRolConstraintValue[]]$ConstraintValues
 
     PsRolSystemRoleAssignment() {
-        $this.ConstraintValues = [System.Collections.Generic.List[PsRolConstraintValue]]::new()
+        $this.ConstraintValues = [PsRolConstraintValue[]]::new()
     }
     PsRolSystemRoleAssignment([object]$obj) {
         $this.SystemRoleId = $obj.systemRoleId
         $this.SystemRoleIdentifier = $obj.systemRoleIdentifier
-        $this.ConstraintValues = [System.Collections.Generic.List[PsRolConstraintValue]]::new()
         if ($obj.constraintValues) {
-            foreach ($val in $obj.constraintValues) {
-                $this.ConstraintValues.Add([PsRolConstraintValue]::new($val))
-            }
+            $this.ConstraintValues = foreach ($val in $obj.constraintValues) { [PsRolConstraintValue]::new($val) }
         }
     }
 

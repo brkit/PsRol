@@ -11,12 +11,21 @@ function Get-RolItSystem {
 
     if (-not [string]::IsNullOrEmpty($ItSystemId)) {
         $ApiUrlPart = '/api/v2/itsystem/' + $ItSystemId
+        $Response = Invoke-ApiClient -Uri $ApiUrlPart -Method 'GET'
     }
     else {
-        $ApiUrlPart = '/api/v2/itsystem'
-    }
+        $timeoutSeconds = if ($null -ne $Script:CacheTimeoutSeconds) { $Script:CacheTimeoutSeconds } else { 30 }
+        $isExpired = ($null -eq $Script:ItSystemCache) -or 
+        ($null -eq $Script:ItSystemCacheTime) -or 
+        ((Get-Date) - $Script:ItSystemCacheTime).TotalSeconds -ge $timeoutSeconds
 
-    $Response = Invoke-ApiClient -Uri $ApiUrlPart -Method 'GET'
+        if ($isExpired) {
+            $ApiUrlPart = '/api/v2/itsystem'
+            $Script:ItSystemCache = Invoke-ApiClient -Uri $ApiUrlPart -Method 'GET'
+            $Script:ItSystemCacheTime = Get-Date
+        }
+        $Response = $Script:ItSystemCache
+    }
 
     if ($All.IsPresent) { 
         $itSystems = $Response

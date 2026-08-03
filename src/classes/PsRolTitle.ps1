@@ -1,12 +1,12 @@
 # Copyright (c) Bornholms Regionskommune. Licensed under the EUPL
 class PsRolTitle {
     [string]$name
-    [string]$uuid
+    [guid]$uuid
 
     PsRolTitle() {}
     
     PsRolTitle([object]$obj) {
         $this.name = $obj.name
-        $this.uuid = $obj.uuid
+        $this.uuid = [guid]$obj.uuid
     }
 }

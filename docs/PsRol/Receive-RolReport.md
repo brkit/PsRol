@@ -1,10 +1,10 @@
----
+﻿---
 document type: cmdlet
 external help file: PsRol-Help.xml
 HelpUri: ''
-Locale: da-DK
+Locale: en-US
 Module Name: PsRol
-ms.date: 05-17-2026
+ms.date: 08-03-2026
 PlatyPS schema version: 2024-05-01
 title: Receive-RolReport
 ---
@@ -13,7 +13,7 @@ title: Receive-RolReport
 
 ## SYNOPSIS
 
-{{ Fill in the Synopsis }}
+Requests and downloads a user role report from OS2rollekatalog for a specific date.
 
 ## SYNTAX
 
@@ -25,28 +25,42 @@ Receive-RolReport [-ReportDate] <datetime> [[-OutFile] <string>] [<CommonParamet
 
 ## ALIASES
 
-This cmdlet has the following aliases,
-  {{Insert list of aliases}}
+None.
+
 
 ## DESCRIPTION
 
-{{ Fill in the Description }}
+The `Receive-RolReport` cmdlet requests a user role report from OS2rollekatalog by posting a query payload to `/api/v2/report`.
+
+It formats `-ReportDate` as `yyyy-MM-dd` and submits report filter options (defaulting to returning user roles). If `-OutFile` is specified, the resulting report data is written to the destination file.
 
 ## EXAMPLES
 
-### Example 1
+### Example 1: Request a report for a specific date
 
+```powershell
+PS C:\> Receive-RolReport -ReportDate (Get-Date)
+```
 
+Requests the user role report for today's date.
+
+### Example 2: Save report output to a file
+
+```powershell
+PS C:\> Receive-RolReport -ReportDate (Get-Date) -OutFile 'C:\Reports\UserRoleReport.xlsx'
+```
+
+Downloads and saves the report to `C:\Reports\UserRoleReport.xlsx`.
 
 ## PARAMETERS
 
 ### -OutFile
 
-{{ Fill OutFile Description }}
+Specifies the output file path where the report content will be saved.
 
 ```yaml
 Type: System.String
-DefaultValue: ''
+DefaultValue: None
 SupportsWildcards: false
 Aliases: []
 ParameterSets:
@@ -63,11 +77,11 @@ HelpMessage: ''
 
 ### -ReportDate
 
-{{ Fill ReportDate Description }}
+Mandatory. Specifies the effective date for generating the report.
 
 ```yaml
 Type: System.DateTime
-DefaultValue: ''
+DefaultValue: None
 SupportsWildcards: false
 Aliases: []
 ParameterSets:
@@ -91,17 +105,17 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
+### None
+
+This cmdlet does not accept pipeline input.
+
 ## OUTPUTS
 
 ### System.Object
 
-{{ Fill in the Description }}
+Returns the file path string if `-OutFile` is specified, or the API response object.
 
 ## NOTES
 
-{{ Fill in the Notes }}
-
-
 ## RELATED LINKS
 
-- [Online Version]()

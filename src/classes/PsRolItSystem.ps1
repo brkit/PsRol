@@ -3,7 +3,7 @@ class PsRolItSystem {
     [string]$ItSystemId
     [string]$Name
     [string]$Identifier
-    [string]$SystemType
+    [PsRolItSystemType]$SystemType
     [bool]$Paused
     [bool]$Hidden
     [bool]$ReadOnly
@@ -18,7 +18,7 @@ class PsRolItSystem {
         $this.ItSystemId = [string]$obj.id
         $this.Name = [string]$obj.name
         $this.Identifier = [string]$obj.identifier
-        $this.SystemType = [string]$obj.systemtype
+        $this.SystemType = [PsRolItSystemType]$obj.systemtype
         $this.Paused = [bool]$obj.paused
         $this.Hidden = [bool]$obj.hidden
         $this.ReadOnly = [bool]$obj.readonly

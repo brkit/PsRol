@@ -3,16 +3,16 @@ class PsRolManagerSubstitute {
     hidden [guid]$Uuid
     [string]$UserId
     [string]$Name
-    hidden [string]$OrgUnitUuid
+    hidden [guid]$OrgUnitUuid
     [string]$OrgUnitName
 
     PsRolManagerSubstitute() {}
 
     PsRolManagerSubstitute([object]$obj) {
-        $this.Uuid = [guid]$obj.uuid
+        $this.Uuid = [guid]$obj.uuid 
         $this.UserId = [string]$obj.userId
         $this.Name = [string]$obj.name
-        $this.OrgUnitUuid = [string]$obj.orgUnitUuid
+        $this.OrgUnitUuid = [guid]$obj.orgUnitUuid
         $this.OrgUnitName = [string]$obj.orgUnitName
     }
 }

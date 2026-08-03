@@ -32,6 +32,7 @@ Describe 'Get-RolTitle' {
         $result.Count | Should -Be 2
         $result[0].GetType().Name | Should -Be 'PsRolTitle'
         $result[0].Name | Should -Be 'Lærer'
+        $result[0].uuid | Should -BeOfType [guid]
     }
 
     It 'Should filter titles by Name wildcard' {

@@ -1,10 +1,10 @@
----
+﻿---
 document type: cmdlet
 external help file: PsRol-Help.xml
 HelpUri: ''
-Locale: da-DK
+Locale: en-US
 Module Name: PsRol
-ms.date: 05-17-2026
+ms.date: 08-03-2026
 PlatyPS schema version: 2024-05-01
 title: Get-RolRoleGroup
 ---
@@ -13,7 +13,7 @@ title: Get-RolRoleGroup
 
 ## SYNOPSIS
 
-{{ Fill in the Synopsis }}
+Retrieves user role groups from OS2rollekatalog via the REST API.
 
 ## SYNTAX
 
@@ -25,18 +25,22 @@ Get-RolRoleGroup [<CommonParameters>]
 
 ## ALIASES
 
-This cmdlet has the following aliases,
-  {{Insert list of aliases}}
+None.
+
 
 ## DESCRIPTION
 
-{{ Fill in the Description }}
+The `Get-RolRoleGroup` cmdlet issues a `GET` request to `/api/v2/rolegroup` and returns a list of `PsRolRoleGroup` objects representing defined user role groups.
 
 ## EXAMPLES
 
-### Example 1
+### Example 1: Retrieve all user role groups
 
+```
+PS C:\> Get-RolRoleGroup
+```
 
+Retrieves all user role groups from OS2rollekatalog.
 
 ## PARAMETERS
 
@@ -49,17 +53,17 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
+### None
+
+This cmdlet does not accept pipeline input.
+
 ## OUTPUTS
 
-### System.Object
+### PsRolRoleGroup
 
-{{ Fill in the Description }}
+Returns one or more `PsRolRoleGroup` objects.
 
 ## NOTES
 
-{{ Fill in the Notes }}
-
-
 ## RELATED LINKS
 
-- [Online Version]()

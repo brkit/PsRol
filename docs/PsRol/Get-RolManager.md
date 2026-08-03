@@ -1,10 +1,10 @@
----
+﻿---
 document type: cmdlet
 external help file: PsRol-Help.xml
 HelpUri: ''
-Locale: da-DK
+Locale: en-US
 Module Name: PsRol
-ms.date: 05-17-2026
+ms.date: 08-03-2026
 PlatyPS schema version: 2024-05-01
 title: Get-RolManager
 ---
@@ -13,7 +13,7 @@ title: Get-RolManager
 
 ## SYNOPSIS
 
-{{ Fill in the Synopsis }}
+Retrieves manager records and their substitutes from OS2rollekatalog via the REST API.
 
 ## SYNTAX
 
@@ -25,18 +25,22 @@ Get-RolManager [<CommonParameters>]
 
 ## ALIASES
 
-This cmdlet has the following aliases,
-  {{Insert list of aliases}}
+None.
+
 
 ## DESCRIPTION
 
-{{ Fill in the Description }}
+The `Get-RolManager` cmdlet queries the OS2rollekatalog REST API at `/api/v2/manager` and returns a collection of `PsRolManager` objects representing organizational managers and their assigned manager substitutes.
 
 ## EXAMPLES
 
-### Example 1
+### Example 1: Retrieve all managers
 
+```
+PS C:\> Get-RolManager
+```
 
+Retrieves manager records and their substitute mappings.
 
 ## PARAMETERS
 
@@ -49,17 +53,17 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
+### None
+
+This cmdlet does not accept input from the pipeline.
+
 ## OUTPUTS
 
-### System.Object
+### PsRolManager
 
-{{ Fill in the Description }}
+Returns one or more `PsRolManager` objects.
 
 ## NOTES
 
-{{ Fill in the Notes }}
-
-
 ## RELATED LINKS
 
-- [Online Version]()

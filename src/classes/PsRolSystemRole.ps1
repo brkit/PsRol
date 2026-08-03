@@ -37,7 +37,7 @@ class PsRolSupportedConstraintTypes {
 }
 class PsRolConstraintType {
     [string]$ConstraintTypeId
-    [string]$ConstraintTypeUuid
+    [guid]$ConstraintTypeUuid
     [string]$ConstraintTypeEntityId
     [string]$ConstraintTypeName
     [string]$ConstraintTypeDescription
@@ -48,7 +48,7 @@ class PsRolConstraintType {
 
     PsRolConstraintType([object]$obj) {
         $this.ConstraintTypeId = $obj.id
-        $this.ConstraintTypeUuid = $obj.uuid
+        $this.ConstraintTypeUuid = [guid]$obj.uuid
         $this.ConstraintTypeEntityId = $obj.entityId
         $this.ConstraintTypeName = $obj.name
         $this.ConstraintTypeDescription = $obj.description

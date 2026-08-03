@@ -6,22 +6,23 @@ Locale: en-US
 Module Name: PsRol
 ms.date: 08-03-2026
 PlatyPS schema version: 2024-05-01
-title: New-RolItSystem
+title: Add-RolOrgUnitAssignUserRole
 ---
 
-# New-RolItSystem
+# Add-RolOrgUnitAssignUserRole
 
 ## SYNOPSIS
 
-Creates a new IT system entry in OS2rollekatalog via the REST API.
+Assigns a user role to an organizational unit in OS2rollekatalog via the REST API.
 
 ## SYNTAX
 
 ### __AllParameterSets
 
 ```
-New-RolItSystem [-Name] <string> [-SystemIdentifier] <string> [-ItSystemType] <PsRolItSystemType>
- [[-Domain] <string>] [-Paused] [-Hidden] [-Readonly] [-WhatIf] [-Confirm] [<CommonParameters>]
+Add-RolOrgUnitAssignUserRole [-UserRoleId] <string> [-OrgUnitUuid] <string>
+ [[-StartDate] <datetime>] [[-StopDate] <datetime>] [[-Scope] <PsRolAssignmentScope[]>] [-Inherit]
+ [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## ALIASES
@@ -31,41 +32,30 @@ None.
 
 ## DESCRIPTION
 
-The `New-RolItSystem` cmdlet creates a new IT system in OS2rollekatalog by posting a JSON payload to `/api/v2/itsystem`.
+The `Add-RolOrgUnitAssignUserRole` cmdlet assigns a single user role (`-UserRoleId`) to an organizational unit (`-OrgUnitUuid`). It posts a JSON payload to `/api/v2/organisation/assignment/userrole`.
 
-Mandatory parameters include display name (`-Name`), unique technical identifier (`-SystemIdentifier`), and system type (`-ItSystemType`). Valid system types are (`AD`, `SAML`, `MANUAL`).
+Parameters allow setting the start date (`-StartDate`, defaulting to the current date), optional end date (`-StopDate`), scope restriction objects (`-Scope`), and whether descendant organizational units inherit the assignment (`-Inherit`).
 
-Optional flags control domain scope (`-Domain`, defaulting to `'Administrativt'`), and system state switches (`-Paused`, `-Hidden`, and `-Readonly`).
-
-By convention, Active Directory systems (`-ItSystemType AD`) are expected to be paused on creation; specifying `AD` without `-Paused` emits a warning.
-
-Supports `-WhatIf` and `-Confirm` via `SupportsShouldProcess`.
+The cmdlet supports `-WhatIf` and `-Confirm` via `SupportsShouldProcess`.
 
 ## EXAMPLES
 
-### Example 1: Create a manual IT system
+### Example 1: Assign a user role to an organizational unit with inheritance
 
-```
-PS C:\> New-RolItSystem -Name 'New Manual System' -SystemIdentifier 'MN01' -ItSystemType MANUAL -Hidden -Domain 'Skole'
-```
-
-Creates a new manual IT system named 'New Manual System' with identifier 'MN01' in domain 'Skole' and marks it as hidden.
-
-### Example 2: Create an AD IT system with Paused flag
-
-```
-PS C:\> New-RolItSystem -Name 'AD System' -SystemIdentifier 'AD01' -ItSystemType AD -Paused
+```powershell
+PS C:\> Add-RolOrgUnitAssignUserRole -UserRoleId '500' -OrgUnitUuid '00000000-0000-0000-0000-000000000001' -Inherit
 ```
 
-Creates an AD system with the `-Paused` switch enabled, suppressing the automatic warning.
+Assigns user role `500` to organizational unit `00000000-0000-0000-0000-000000000001` and enables inheritance for descendant organizational units.
 
-### Example 3: Test IT system creation using WhatIf
+### Example 2: Assign a user role with an expiration date
 
+```powershell
+PS C:\> $stop = (Get-Date).AddDays(14)
+PS C:\> Add-RolOrgUnitAssignUserRole -UserRoleId '600' -OrgUnitUuid '00000000-0000-0000-0000-000000000002' -StopDate $stop
 ```
-PS C:\> New-RolItSystem -Name 'Test System' -SystemIdentifier 'TS01' -ItSystemType MANUAL -WhatIf
-```
 
-Demonstrates what action would be taken without invoking the backend API.
+Assigns user role `600` to organizational unit `00000000-0000-0000-0000-000000000002` valid for 14 days without inheritance.
 
 ## PARAMETERS
 
@@ -91,13 +81,97 @@ AcceptedValues: []
 HelpMessage: ''
 ```
 
-### -Domain
+### -Inherit
 
-Specifies the domain scope for the IT system. Defaults to `'Administrativt'`.
+Switch parameter. When specified, descendant organizational units inherit this user role assignment.
+
+```yaml
+Type: System.Management.Automation.SwitchParameter
+DefaultValue: False
+SupportsWildcards: false
+Aliases: []
+ParameterSets:
+- Name: (All)
+  Position: Named
+  IsRequired: false
+  ValueFromPipeline: false
+  ValueFromPipelineByPropertyName: false
+  ValueFromRemainingArguments: false
+DontShow: false
+AcceptedValues: []
+HelpMessage: ''
+```
+
+### -OrgUnitUuid
+
+Mandatory. Specifies the UUID of the target organizational unit.
 
 ```yaml
 Type: System.String
-DefaultValue: Administrativt
+DefaultValue: None
+SupportsWildcards: false
+Aliases: []
+ParameterSets:
+- Name: (All)
+  Position: 1
+  IsRequired: true
+  ValueFromPipeline: false
+  ValueFromPipelineByPropertyName: false
+  ValueFromRemainingArguments: false
+DontShow: false
+AcceptedValues: []
+HelpMessage: ''
+```
+
+### -Scope
+
+Specifies one or more `PsRolAssignmentScope` objects defining additional criteria for the assignment.
+
+```yaml
+Type: PsRolAssignmentScope[]
+DefaultValue: None
+SupportsWildcards: false
+Aliases: []
+ParameterSets:
+- Name: (All)
+  Position: 4
+  IsRequired: false
+  ValueFromPipeline: false
+  ValueFromPipelineByPropertyName: false
+  ValueFromRemainingArguments: false
+DontShow: false
+AcceptedValues: []
+HelpMessage: ''
+```
+
+### -StartDate
+
+Specifies the start date from which the role assignment becomes valid. Defaults to the current date/time.
+
+```yaml
+Type: System.DateTime
+DefaultValue: (Get-Date)
+SupportsWildcards: false
+Aliases: []
+ParameterSets:
+- Name: (All)
+  Position: 2
+  IsRequired: false
+  ValueFromPipeline: false
+  ValueFromPipelineByPropertyName: false
+  ValueFromRemainingArguments: false
+DontShow: false
+AcceptedValues: []
+HelpMessage: ''
+```
+
+### -StopDate
+
+Specifies an optional expiration date for the assignment.
+
+```yaml
+Type: System.DateTime
+DefaultValue: None
 SupportsWildcards: false
 Aliases: []
 ParameterSets:
@@ -112,54 +186,9 @@ AcceptedValues: []
 HelpMessage: ''
 ```
 
-### -Hidden
+### -UserRoleId
 
-Switch parameter. When specified, marks the IT system as hidden in OS2rollekatalog.
-
-```yaml
-Type: System.Management.Automation.SwitchParameter
-DefaultValue: False
-SupportsWildcards: false
-Aliases: []
-ParameterSets:
-- Name: (All)
-  Position: Named
-  IsRequired: false
-  ValueFromPipeline: false
-  ValueFromPipelineByPropertyName: false
-  ValueFromRemainingArguments: false
-DontShow: false
-AcceptedValues: []
-HelpMessage: ''
-```
-
-### -ItSystemType
-
-Mandatory. Specifies the system type enum (`AD`, `SAML`, `MANUAL`).
-
-```yaml
-Type: PsRolItSystemType
-DefaultValue: None
-SupportsWildcards: false
-Aliases: []
-ParameterSets:
-- Name: (All)
-  Position: 2
-  IsRequired: true
-  ValueFromPipeline: false
-  ValueFromPipelineByPropertyName: false
-  ValueFromRemainingArguments: false
-DontShow: false
-AcceptedValues:
-- AD
-- SAML
-- MANUAL
-HelpMessage: ''
-```
-
-### -Name
-
-Mandatory. Specifies the display name of the IT system.
+Mandatory. Specifies the ID of the user role to assign.
 
 ```yaml
 Type: System.String
@@ -169,69 +198,6 @@ Aliases: []
 ParameterSets:
 - Name: (All)
   Position: 0
-  IsRequired: true
-  ValueFromPipeline: false
-  ValueFromPipelineByPropertyName: false
-  ValueFromRemainingArguments: false
-DontShow: false
-AcceptedValues: []
-HelpMessage: ''
-```
-
-### -Paused
-
-Switch parameter. When specified, marks the IT system in a paused state.
-
-```yaml
-Type: System.Management.Automation.SwitchParameter
-DefaultValue: False
-SupportsWildcards: false
-Aliases: []
-ParameterSets:
-- Name: (All)
-  Position: Named
-  IsRequired: false
-  ValueFromPipeline: false
-  ValueFromPipelineByPropertyName: false
-  ValueFromRemainingArguments: false
-DontShow: false
-AcceptedValues: []
-HelpMessage: ''
-```
-
-### -Readonly
-
-Switch parameter. When specified, marks the IT system as read-only.
-
-```yaml
-Type: System.Management.Automation.SwitchParameter
-DefaultValue: False
-SupportsWildcards: false
-Aliases: []
-ParameterSets:
-- Name: (All)
-  Position: Named
-  IsRequired: false
-  ValueFromPipeline: false
-  ValueFromPipelineByPropertyName: false
-  ValueFromRemainingArguments: false
-DontShow: false
-AcceptedValues: []
-HelpMessage: ''
-```
-
-### -SystemIdentifier
-
-Mandatory. Specifies the unique technical identifier for the IT system.
-
-```yaml
-Type: System.String
-DefaultValue: None
-SupportsWildcards: false
-Aliases: []
-ParameterSets:
-- Name: (All)
-  Position: 1
   IsRequired: true
   ValueFromPipeline: false
   ValueFromPipelineByPropertyName: false
@@ -278,9 +244,9 @@ This cmdlet does not accept pipeline input.
 
 ## OUTPUTS
 
-### System.Management.Automation.PSCustomObject
+### None
 
-Returns the API response object representing the created IT system.
+This cmdlet does not return any output.
 
 ## NOTES
 

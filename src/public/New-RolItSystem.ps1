@@ -7,6 +7,7 @@ function New-RolItSystem {
         [Parameter(Mandatory)]
         [string]$SystemIdentifier,
         [Parameter(Mandatory)]
+        [ValidateSet('AD', 'MANUAL', 'SAML')]
         [PsRolItSystemType]$ItSystemType,
         [switch]$Paused,
         [switch]$Hidden,

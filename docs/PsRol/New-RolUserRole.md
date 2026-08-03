@@ -6,22 +6,23 @@ Locale: en-US
 Module Name: PsRol
 ms.date: 08-03-2026
 PlatyPS schema version: 2024-05-01
-title: Add-RolItSystemRole
+title: New-RolUserRole
 ---
 
-# Add-RolItSystemRole
+# New-RolUserRole
 
 ## SYNOPSIS
 
-Creates a new system role for a target IT system in OS2rollekatalog.
+Creates a new user role in OS2rollekatalog via the REST API.
 
 ## SYNTAX
 
 ### __AllParameterSets
 
 ```
-Add-RolItSystemRole [-ItSystemId] <string> [-Name] <string> [-Identifier] <string>
- [[-Description] <string>] [[-Weight] <int>] [-WhatIf] [-Confirm] [<CommonParameters>]
+New-RolUserRole [-Name] <string> [-Description] <string> [-ItSystemId] <string>
+ [-SystemRoleAssignment] <PsRolSystemRoleAssignment[]> [-SensitiveRole] [-WhatIf] [-Confirm]
+ [<CommonParameters>]
 ```
 
 ## ALIASES
@@ -31,33 +32,33 @@ None.
 
 ## DESCRIPTION
 
-The `Add-RolItSystemRole` cmdlet adds a new system role definition to an IT system in OS2rollekatalog.
+The `New-RolUserRole` cmdlet creates a new user role definition in OS2rollekatalog by posting a payload to `/api/v2/userrole`.
 
-Before creating the system role, the cmdlet validates that the IT system specified by `-ItSystemId` exists via the REST API. If the IT system is not found, an error is thrown.
+Parameters require display name (`-Name`), description (`-Description`), target IT system ID (`-ItSystemId`), and an array of system role assignments (`-SystemRoleAssignment`). Optional flag `-SensitiveRole` marks the role as sensitive.
 
-The new system role is created via the REST API. On success, the cmdlet returns the new system role.
+Accepts pipeline input by property name for `-ItSystemId` and `-SystemRoleAssignment`.
 
-The cmdlet supports pipeline input for `-ItSystemId`.
-
-The cmdlet supports `-WhatIf` and `-Confirm` via `SupportsShouldProcess`.
+Supports `-WhatIf` and `-Confirm` via `SupportsShouldProcess`.
 
 ## EXAMPLES
 
-### Example 1: Add a system role to an IT system
+### Example 1: Create a user role with system role assignments
 
 ```powershell
-PS C:\> Add-RolItSystemRole -ItSystemId '100' -Name 'Role 1' -Identifier 'ID1' -Description 'Test role description' -Weight 2
+PS C:\> $sra = New-RolSystemRoleAssignment -SystemRoleId '120'
+PS C:\> New-RolUserRole -Name 'Test User Role' -Description 'Description' -ItSystemId '100' -SystemRoleAssignment $sra -SensitiveRole
 ```
 
-Creates a new system role named 'Role 1' with identifier 'ID1' and weight `2` for IT system with the ID '100', if it exists.
+Creates a new user role named 'Test User Role' associated with IT system `100` and system role `120`.
 
-### Example 2: Add a system role using pipeline input
+### Example 2: Create a user role using pipeline input
 
 ```powershell
-PS C:\> Get-RolItSystem -Name 'AD System' | Add-RolItSystemRole -Name 'User Administrator' -Identifier 'ID2'
+PS C:\> $sra = New-RolSystemRoleAssignment -SystemRoleId '210'
+PS C:\> [PSCustomObject]@{ ItSystemId = '200'; SystemRoleAssignment = @($sra) } | New-RolUserRole -Name 'Pipeline Role' -Description 'Role via pipeline'
 ```
 
-Pipes the Id of an IT system from `Get-RolItSystem` to `Add-RolItSystemRole` to create a new system role for the IT system.
+Pipes IT system ID and system role assignments to create a user role.
 
 ## PARAMETERS
 
@@ -85,74 +86,7 @@ HelpMessage: ''
 
 ### -Description
 
-Specifies an optional description for the system role.
-
-```yaml
-Type: System.String
-DefaultValue: None
-SupportsWildcards: false
-Aliases: []
-ParameterSets:
-- Name: (All)
-  Position: 3
-  IsRequired: false
-  ValueFromPipeline: false
-  ValueFromPipelineByPropertyName: false
-  ValueFromRemainingArguments: false
-DontShow: false
-AcceptedValues: []
-HelpMessage: ''
-```
-
-### -Identifier
-
-Mandatory.
-Specifies the technical string identifier for the system role.
-
-```yaml
-Type: System.String
-DefaultValue: None
-SupportsWildcards: false
-Aliases: []
-ParameterSets:
-- Name: (All)
-  Position: 2
-  IsRequired: true
-  ValueFromPipeline: false
-  ValueFromPipelineByPropertyName: false
-  ValueFromRemainingArguments: false
-DontShow: false
-AcceptedValues: []
-HelpMessage: ''
-```
-
-### -ItSystemId
-
-Mandatory.
-Specifies the ID of the target IT system.
-Accepts pipeline input by property name.
-
-```yaml
-Type: System.String
-DefaultValue: None
-SupportsWildcards: false
-Aliases: []
-ParameterSets:
-- Name: (All)
-  Position: 0
-  IsRequired: true
-  ValueFromPipeline: false
-  ValueFromPipelineByPropertyName: true
-  ValueFromRemainingArguments: false
-DontShow: false
-AcceptedValues: []
-HelpMessage: ''
-```
-
-### -Name
-
-Mandatory.
-Specifies the display name of the system role.
+Mandatory. Specifies the description text for the user role. Empty strings are permitted.
 
 ```yaml
 Type: System.String
@@ -171,24 +105,84 @@ AcceptedValues: []
 HelpMessage: ''
 ```
 
-### -Weight
+### -ItSystemId
 
-Specifies the weight integer for the system role.
-Defaults to `1`.
-Weight is used when determining which roles are most important in case of multiple assignments.
-A higher weight indicates a more important role.
+Mandatory. Specifies the ID of the IT system to which this user role belongs. Accepts pipeline input by property name.
 
 ```yaml
-Type: System.Int32
-DefaultValue: 1
+Type: System.String
+DefaultValue: None
 SupportsWildcards: false
 Aliases: []
 ParameterSets:
 - Name: (All)
-  Position: 4
+  Position: 2
+  IsRequired: true
+  ValueFromPipeline: false
+  ValueFromPipelineByPropertyName: true
+  ValueFromRemainingArguments: false
+DontShow: false
+AcceptedValues: []
+HelpMessage: ''
+```
+
+### -Name
+
+Mandatory. Specifies the display name of the user role.
+
+```yaml
+Type: System.String
+DefaultValue: None
+SupportsWildcards: false
+Aliases: []
+ParameterSets:
+- Name: (All)
+  Position: 0
+  IsRequired: true
+  ValueFromPipeline: false
+  ValueFromPipelineByPropertyName: false
+  ValueFromRemainingArguments: false
+DontShow: false
+AcceptedValues: []
+HelpMessage: ''
+```
+
+### -SensitiveRole
+
+Switch parameter. When specified, marks the user role as a sensitive role.
+
+```yaml
+Type: System.Management.Automation.SwitchParameter
+DefaultValue: False
+SupportsWildcards: false
+Aliases: []
+ParameterSets:
+- Name: (All)
+  Position: Named
   IsRequired: false
   ValueFromPipeline: false
   ValueFromPipelineByPropertyName: false
+  ValueFromRemainingArguments: false
+DontShow: false
+AcceptedValues: []
+HelpMessage: ''
+```
+
+### -SystemRoleAssignment
+
+Mandatory. Specifies one or more `PsRolSystemRoleAssignment` objects to include in the user role. Accepts pipeline input by property name.
+
+```yaml
+Type: PsRolSystemRoleAssignment[]
+DefaultValue: None
+SupportsWildcards: false
+Aliases: []
+ParameterSets:
+- Name: (All)
+  Position: 3
+  IsRequired: true
+  ValueFromPipeline: false
+  ValueFromPipelineByPropertyName: true
   ValueFromRemainingArguments: false
 DontShow: false
 AcceptedValues: []
@@ -228,16 +222,18 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ### System.String
 
-Accepts an object containing an `ItSystemId` property via the pipeline.
+Accepts objects containing `ItSystemId` and `SystemRoleAssignment` properties via the pipeline.
+
+### PsRolSystemRoleAssignment[]
+
+Accepts objects of type PsRolSystemRoleAssignment via the pipeline
 
 ## OUTPUTS
 
-### PsRolSystemRole
+### System.Management.Automation.PSCustomObject
 
-Returns the newly created `PsRolSystemRole` object.
+Returns the created user role object response from the API.
 
 ## NOTES
 
 ## RELATED LINKS
-
-

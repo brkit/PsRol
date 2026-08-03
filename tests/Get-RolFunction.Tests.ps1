@@ -38,6 +38,7 @@ Describe 'Get-RolFunction' {
         $result.Count | Should -Be 2
         $result[0].GetType().Name | Should -Be 'PsRolFunction'
         $result[0].Name | Should -Be 'Tillidsmand'
+        $result[0].uuid | Should -BeOfType [guid]
     }
 
     It 'Should filter functions by Name wildcard' {

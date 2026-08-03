@@ -6,21 +6,21 @@ Locale: en-US
 Module Name: PsRol
 ms.date: 08-03-2026
 PlatyPS schema version: 2024-05-01
-title: Get-RolRoleGroupMember
+title: Get-RolTitle
 ---
 
-# Get-RolRoleGroupMember
+# Get-RolTitle
 
 ## SYNOPSIS
 
-Retrieves members of a specific user role group from OS2rollekatalog.
+Retrieves job titles registered in OS2rollekatalog via the REST API.
 
 ## SYNTAX
 
 ### __AllParameterSets
 
 ```
-Get-RolRoleGroupMember [[-RoleGroupId] <string>] [<CommonParameters>]
+Get-RolTitle [[-Name] <string>] [<CommonParameters>]
 ```
 
 ## ALIASES
@@ -30,30 +30,38 @@ None.
 
 ## DESCRIPTION
 
-The `Get-RolRoleGroupMember` cmdlet calls `GET /api/v2/rolegroup/{RoleGroupId}/users` to retrieve the list of users belonging to the designated role group.
+The `Get-RolTitle` cmdlet fetches job titles from `/api/title`.
 
-Returns strongly-typed `PsRolUser` objects.
+If `-Name` is supplied, returned titles are filtered using a wildcard search (`-like`). Returns strongly-typed `PsRolTitle` objects.
 
 ## EXAMPLES
 
-### Example 1: Retrieve members of a role group
+### Example 1: Retrieve all titles
 
 ```
-PS C:\> Get-RolRoleGroupMember -RoleGroupId 'rg100'
+PS C:\> Get-RolTitle
 ```
 
-Retrieves all user members belonging to role group `rg100`.
+Retrieves all job titles.
+
+### Example 2: Filter job titles by name wildcard
+
+```
+PS C:\> Get-RolTitle -Name '*tekniker*'
+```
+
+Returns titles containing 'tekniker'.
 
 ## PARAMETERS
 
-### -RoleGroupId
+### -Name
 
-Optional positional parameter. Specifies the ID of the role group whose members should be retrieved.
+Optional positional parameter. Specifies a wildcard pattern to filter job titles by name.
 
 ```yaml
 Type: System.String
 DefaultValue: None
-SupportsWildcards: false
+SupportsWildcards: true
 Aliases: []
 ParameterSets:
 - Name: (All)
@@ -82,9 +90,9 @@ This cmdlet does not accept pipeline input.
 
 ## OUTPUTS
 
-### PsRolUser
+### PsRolTitle
 
-Returns one or more `PsRolUser` objects.
+Returns one or more `PsRolTitle` objects.
 
 ## NOTES
 

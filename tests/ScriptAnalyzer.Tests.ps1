@@ -29,7 +29,8 @@ BeforeAll {
         ExcludeRules        = @('PSReviewUnusedParameter')
     }
 
-    Import-Module 'PSScriptAnalyzer'
+    Import-Module 'PSScriptAnalyzer' -ErrorAction SilentlyContinue
+    $scriptAnalyzerCmd = Get-Command -Name 'Invoke-ScriptAnalyzer' -ErrorAction SilentlyContinue
 }
 Describe 'File: <_.name>' -ForEach $files {
     Context 'Code Quality Check' {
@@ -41,6 +42,10 @@ Describe 'File: <_.name>' -ForEach $files {
             $syntaxErrors.Count | Should -Be 0
         }
         It 'passess ScriptAnalyzer' {
+            if (-not $scriptAnalyzerCmd) {
+                Set-ItResult -Skipped -Because 'PSScriptAnalyzer module is not installed.'
+                return
+            }
             $saResults = Invoke-ScriptAnalyzer -Path $PSItem -Settings $ScriptAnalyzerSettings | Where-Object { $_.Message -notmatch 'TypeNotFound' }
             $saResults | Should -BeNullOrEmpty -Because $($saResults.Message -join ';')
         }         

@@ -88,6 +88,7 @@ Describe 'Get-RolManager' {
         $result[0].Substitutes.Count | Should -Be 1
         $result[0].Substitutes[0].UserId | Should -Be 'sub01'
         $result[0].Substitutes[0].OrgUnitName | Should -Be 'IT Department'
+        $result[0].Substitutes[0].OrgUnitUuid | Should -BeOfType [guid]
 
         $result[1].Substitutes.Count | Should -Be 2
         $result[1].Substitutes[0].UserId | Should -Be 'sub02'

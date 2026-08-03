@@ -38,6 +38,7 @@ Describe 'Get-RolOrganisation' {
         $result.Count | Should -Be 2
         $result[0].GetType().Name | Should -Be 'PsRolOrganisation'
         $result[0].Name | Should -Be 'IT Afdeling'
+        $result[0].Uuid | Should -BeOfType [guid]
     }
 
     It 'Should filter organisation units by Name regex match' {

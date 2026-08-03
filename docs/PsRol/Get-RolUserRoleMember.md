@@ -1,10 +1,10 @@
----
+﻿---
 document type: cmdlet
 external help file: PsRol-Help.xml
 HelpUri: ''
-Locale: da-DK
+Locale: en-US
 Module Name: PsRol
-ms.date: 05-17-2026
+ms.date: 08-03-2026
 PlatyPS schema version: 2024-05-01
 title: Get-RolUserRoleMember
 ---
@@ -13,7 +13,7 @@ title: Get-RolUserRoleMember
 
 ## SYNOPSIS
 
-{{ Fill in the Synopsis }}
+Retrieves users assigned to a specific user role in OS2rollekatalog.
 
 ## SYNTAX
 
@@ -25,28 +25,34 @@ Get-RolUserRoleMember [[-UserRoleId] <string>] [<CommonParameters>]
 
 ## ALIASES
 
-This cmdlet has the following aliases,
-  {{Insert list of aliases}}
+None.
+
 
 ## DESCRIPTION
 
-{{ Fill in the Description }}
+The `Get-RolUserRoleMember` cmdlet calls `GET /api/v2/userrole/{UserRoleId}/users` to fetch all users who are assigned the specified user role.
+
+Returns strongly-typed `PsRolUserRoleMember` objects.
 
 ## EXAMPLES
 
-### Example 1
+### Example 1: Retrieve assigned users for a user role
 
-{{ Add example description here }}
+```powershell
+PS C:\> Get-RolUserRoleMember -UserRoleId 'ur101'
+```
+
+Retrieves user assignment members for user role `ur101`.
 
 ## PARAMETERS
 
 ### -UserRoleId
 
-{{ Fill UserRoleId Description }}
+Optional positional parameter. Specifies the ID of the user role whose members should be retrieved.
 
 ```yaml
 Type: System.String
-DefaultValue: ''
+DefaultValue: None
 SupportsWildcards: false
 Aliases: []
 ParameterSets:
@@ -70,17 +76,17 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
+### None
+
+This cmdlet does not accept pipeline input.
+
 ## OUTPUTS
 
-### System.Object
+### PsRolUserRoleMember
 
-{{ Fill in the Description }}
+Returns one or more `PsRolUserRoleMember` objects.
 
 ## NOTES
 
-{{ Fill in the Notes }}
-
 ## RELATED LINKS
-
-{{ Fill in the related links here }}
 

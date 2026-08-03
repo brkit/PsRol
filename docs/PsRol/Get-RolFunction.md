@@ -6,21 +6,21 @@ Locale: en-US
 Module Name: PsRol
 ms.date: 08-03-2026
 PlatyPS schema version: 2024-05-01
-title: Get-RolRoleGroupMember
+title: Get-RolFunction
 ---
 
-# Get-RolRoleGroupMember
+# Get-RolFunction
 
 ## SYNOPSIS
 
-Retrieves members of a specific user role group from OS2rollekatalog.
+Retrieves functions from OS2rollekatalog via the REST API.
 
 ## SYNTAX
 
 ### __AllParameterSets
 
 ```
-Get-RolRoleGroupMember [[-RoleGroupId] <string>] [<CommonParameters>]
+Get-RolFunction [[-Name] <string>] [<CommonParameters>]
 ```
 
 ## ALIASES
@@ -30,30 +30,38 @@ None.
 
 ## DESCRIPTION
 
-The `Get-RolRoleGroupMember` cmdlet calls `GET /api/v2/rolegroup/{RoleGroupId}/users` to retrieve the list of users belonging to the designated role group.
+The `Get-RolFunction` cmdlet fetches functions defined in OS2rollekatalog by issuing a `GET` request to `/api/v2/function`.
 
-Returns strongly-typed `PsRolUser` objects.
+If `-Name` is specified, the results are filtered using wildcard matching (`-like`). If `-Name` is omitted or empty, all functions are returned as strongly-typed `PsRolFunction` objects.
 
 ## EXAMPLES
 
-### Example 1: Retrieve members of a role group
+### Example 1: Retrieve all functions
 
 ```
-PS C:\> Get-RolRoleGroupMember -RoleGroupId 'rg100'
+PS C:\> Get-RolFunction
 ```
 
-Retrieves all user members belonging to role group `rg100`.
+Retrieves all function definitions from OS2rollekatalog.
+
+### Example 2: Filter functions by name wildcard pattern
+
+```
+PS C:\> Get-RolFunction -Name '*Sikkerhed*'
+```
+
+Retrieves functions whose name contains 'Sikkerhed'.
 
 ## PARAMETERS
 
-### -RoleGroupId
+### -Name
 
-Optional positional parameter. Specifies the ID of the role group whose members should be retrieved.
+Optional positional parameter. Specifies a wildcard pattern string to filter returned functions by name.
 
 ```yaml
 Type: System.String
 DefaultValue: None
-SupportsWildcards: false
+SupportsWildcards: true
 Aliases: []
 ParameterSets:
 - Name: (All)
@@ -82,9 +90,9 @@ This cmdlet does not accept pipeline input.
 
 ## OUTPUTS
 
-### PsRolUser
+### PsRolFunction
 
-Returns one or more `PsRolUser` objects.
+Returns one or more `PsRolFunction` objects.
 
 ## NOTES
 

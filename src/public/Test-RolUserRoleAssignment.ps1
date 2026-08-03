@@ -10,9 +10,11 @@ function Test-RolUserRoleAssignment {
         [Alias('Id')]
         [string]$UserRoleId,
         [Parameter(ParameterSetName = 'ByProperties', ValueFromPipelineByPropertyName)]
-        [string]$Name,
+        [Alias('Name')]
+        [string]$UserRoleName,
         [Parameter(ParameterSetName = 'ByProperties', ValueFromPipelineByPropertyName)]
-        [string]$Identifier
+        [Alias('Identifier')]
+        [string]$UserRoleIdentifier
     )
 
     process {
@@ -24,7 +26,7 @@ function Test-RolUserRoleAssignment {
             return $false
         }
 
-        if (-not $UserRoleId -and -not $Name -and -not $Identifier) {
+        if (-not $UserRoleId -and -not $UserRoleName -and -not $UserRoleIdentifier) {
             Write-Error 'Missing parameter for testing user role assignment'
             return
         }
@@ -34,12 +36,12 @@ function Test-RolUserRoleAssignment {
                 if ([string]$role.userRole.id -eq [string]$UserRoleId) { return $true }
             }
 
-            if (-not [string]::IsNullOrEmpty($Identifier)) {
-                if ($role.userRole.identifier -eq $Identifier) { return $true }
+            if (-not [string]::IsNullOrEmpty($UserRoleIdentifier)) {
+                if ($role.userRole.identifier -eq $UserRoleIdentifier) { return $true }
             }
 
-            if (-not [string]::IsNullOrEmpty($Name)) {
-                if ($role.userRole.name -like $Name) { return $true }
+            if (-not [string]::IsNullOrEmpty($UserRoleName)) {
+                if ($role.userRole.name -like $UserRoleName) { return $true }
             }
         }
 

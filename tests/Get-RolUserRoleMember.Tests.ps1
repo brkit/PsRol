@@ -40,5 +40,6 @@ Describe 'Get-RolUserRoleMember' {
         $result[0].GetType().Name | Should -Be 'PsRolUserRoleMember'
         $result[0].UserId | Should -Be 'usr01'
         $result[0].Name | Should -Be 'Member One'
+        $result[0].ExtUuid | Should -BeOfType [guid]
     }
 }

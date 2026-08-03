@@ -7,7 +7,7 @@ AfterAll {
     Remove-Module PsRol
 }
 
-Describe "Test-RolUserRoleAssignment" {
+Describe 'Test-RolUserRoleAssignment' {
     BeforeEach {
         Mock -CommandName Invoke-ApiClient -ModuleName PsRol -MockWith {
             param($Uri, $Method)
@@ -61,43 +61,43 @@ Describe "Test-RolUserRoleAssignment" {
         }
     }
 
-    It "Should return true when role matches by UserRoleId" {
+    It 'Should return true when role matches by UserRoleId' {
         $result = Test-RolUserRoleAssignment -UserId 'user123' -UserRoleId '1001'
         $result | Should -Be $true
     }
 
-    It "Should return true when role matches by Id alias" {
+    It 'Should return true when role matches by Id alias' {
         $result = Test-RolUserRoleAssignment -UserId 'user123' -Id '1001'
         $result | Should -Be $true
     }
 
-    It "Should return true when role matches by Name" {
+    It 'Should return true when role matches by Name' {
         $result = Test-RolUserRoleAssignment -UserId 'user123' -Name '*Standard User*'
         $result | Should -Be $true
     }
 
-    It "Should return true when role matches by Identifier" {
+    It 'Should return true when role matches by Identifier' {
         $result = Test-RolUserRoleAssignment -UserId 'user123' -Identifier 'TEST_CUSTOM_APP_ROLE'
         $result | Should -Be $true
     }
 
-    It "Should return false when role is not present" {
+    It 'Should return false when role is not present' {
         $result = Test-RolUserRoleAssignment -UserId 'user123' -UserRoleId '999999'
         $result | Should -Be $false
     }
 
-    It "Should return false when API returns no assigned roles" {
+    It 'Should return false when API returns no assigned roles' {
         $result = Test-RolUserRoleAssignment -UserId 'user404' -UserRoleId '1001'
         $result | Should -Be $false
     }
 
-    It "Should query custom domain when specified" {
+    It 'Should query custom domain when specified' {
         $result = Test-RolUserRoleAssignment -UserId 'user123' -UserRoleId '1001' -Domain 'Skole'
         $result | Should -Be $true
         Should -Invoke -CommandName Invoke-ApiClient -ModuleName PsRol -Times 1 -ParameterFilter { $Uri -eq '/api/v2/user/user123/assignments?domain=Skole' }
     }
 
-    It "Should write error when no UserRoleId, Name, or Identifier is provided" {
+    It 'Should write error when no UserRoleId, Name, or Identifier is provided' {
         Mock -CommandName Write-Error -ModuleName PsRol -MockWith {}
         $result = Test-RolUserRoleAssignment -UserId 'user123'
         Should -Invoke -CommandName Write-Error -ModuleName PsRol -Times 1 -ParameterFilter { $Message -eq 'Missing parameter for testing user role assignment' }

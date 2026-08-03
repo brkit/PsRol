@@ -13,20 +13,20 @@ AfterAll {
     Remove-Module PsRol
 }
 
-Describe "Get-RolConfiguration" {
+Describe 'Get-RolConfiguration' {
         
-    It "Should return empty hashtable if config file does not exist" {
+    It 'Should return empty hashtable if config file does not exist' {
         $result = Get-RolConfiguration
         $result
         $result.Count | Should -Be 0
         $result | Should -BeNullOrEmpty
     }
 
-    It "Should return parsed JSON as hashtable if config file exists" {
+    It 'Should return parsed JSON as hashtable if config file exists' {
         '{"BaseUrl": "https://api.test", "ApiKey": "secret"}' | Set-Content -Path $tempFile
             
         $result = Get-RolConfiguration
-        $result.BaseUrl | Should -Be "https://api.test"
-        $result.ApiKey | Should -Be "secret"
+        $result.BaseUrl | Should -Be 'https://api.test'
+        $result.ApiKey | Should -Be 'secret'
     }
 }

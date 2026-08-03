@@ -7,6 +7,6 @@ $Script:CacheTimeoutSeconds = 30
 # Using Register-ArgumentCompleter ensures tab-completion without strict validation, so other values can be specified manually.
 Register-ArgumentCompleter -CommandName Add-RolAssignUserRole, Get-RolUserRoleAssignment, New-RolItSystem, Test-RolUserRoleAssignment -ParameterName Domain -ScriptBlock {
     param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
-    @('Administrativt', 'Skole').Where({ $PSItem -like "$wordToComplete*" }) |
+    @('Administrativt', 'Skole').Where({ $PSItem -like ('{0}*' -f $wordToComplete) }) |
     ForEach-Object { [System.Management.Automation.CompletionResult]::new($PSItem, $PSItem, 'ParameterValue', $PSItem) }
 }

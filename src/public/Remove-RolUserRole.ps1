@@ -11,10 +11,10 @@ function Remove-RolUserRole {
         
         $UserRoleToDelete = Invoke-ApiClient -Uri $ApiUrl -Method 'GET'
         if ($null -eq $UserRoleToDelete) {
-            throw "UserRole '$UserRoleId' not found."
+            throw ('UserRole ''{0}'' not found.' -f $UserRoleId)
         }
 
-        if ($PSCmdlet.ShouldProcess("UserRole: '$($UserRoleToDelete.Name) ($UserRoleId)'", 'Delete')) {
+        if ($PSCmdlet.ShouldProcess(('UserRole: ''{0} ({1})''' -f $UserRoleToDelete.Name, $UserRoleId), 'Delete')) {
             Invoke-ApiClient -Uri $ApiUrl -Method 'DELETE'
         }
     }

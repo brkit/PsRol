@@ -7,7 +7,7 @@ AfterAll {
     Remove-Module PsRol
 }
 
-Describe "Get-RolManager" {
+Describe 'Get-RolManager' {
     BeforeEach {
         Mock -CommandName Invoke-ApiClient -ModuleName PsRol -MockWith {
             return @(
@@ -62,13 +62,13 @@ Describe "Get-RolManager" {
         }
     }
 
-    It "Should call the API with correct URI and method" {
+    It 'Should call the API with correct URI and method' {
         $result = Get-RolManager
         
         Should -Invoke -CommandName Invoke-ApiClient -ModuleName PsRol -Times 1 -ParameterFilter { $Uri -eq '/api/v2/manager' -and $Method -eq 'Get' }
     }
 
-    It "Should return multiple manager objects with mapped properties" {
+    It 'Should return multiple manager objects with mapped properties' {
         $result = Get-RolManager
         
         $result.Count | Should -Be 3
@@ -82,7 +82,7 @@ Describe "Get-RolManager" {
         $result[2].Name | Should -Be 'Manager 03'
     }
 
-    It "Should correctly map substitutes for managers" {
+    It 'Should correctly map substitutes for managers' {
         $result = Get-RolManager
         
         $result[0].Substitutes.Count | Should -Be 1

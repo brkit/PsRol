@@ -7,7 +7,7 @@ AfterAll {
     Remove-Module PsRol
 }
 
-Describe "Get-RolRoleGroup" {
+Describe 'Get-RolRoleGroup' {
     BeforeEach {
         Mock -CommandName Invoke-ApiClient -ModuleName PsRol -MockWith {
             return @(
@@ -30,7 +30,7 @@ Describe "Get-RolRoleGroup" {
         }
     }
 
-    It "Should call the API and return formatted role groups" {
+    It 'Should call the API and return formatted role groups' {
         $result = Get-RolRoleGroup
         
         Should -Invoke -CommandName Invoke-ApiClient -ModuleName PsRol -Times 1 -ParameterFilter { $Uri -eq '/api/v2/rolegroup' -and $Method -eq 'Get' }

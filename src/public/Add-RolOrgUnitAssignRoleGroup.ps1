@@ -30,7 +30,7 @@ function Add-RolOrgUnitAssignRoleGroup {
         }
         
         # Use -EnumsAsStrings or the enum gets translated to its integer representation
-        if ($PSCmdlet.ShouldProcess("RoleGroup '$RoleGroupId' => OrgUnit '$OrgUnitUuid'", 'Assign')) {
+        if ($PSCmdlet.ShouldProcess(('RoleGroup ''{0}'' => OrgUnit ''{1}''' -f $RoleGroupId, $OrgUnitUuid), 'Assign')) {
             Invoke-ApiClient -Uri $ApiUrl -Method 'POST' -Body ($Request | ConvertTo-Json -EnumsAsStrings -Depth 4)
         }
     }

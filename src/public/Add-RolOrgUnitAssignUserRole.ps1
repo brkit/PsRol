@@ -16,11 +16,11 @@ function Add-RolOrgUnitAssignUserRole {
         $ApiUrl = '/api/v2/organisation/assignment/userrole'
 
         $Request = [PSCustomObject]@{
-            assignmentType = "USER_ROLE"
+            assignmentType = 'USER_ROLE'
             inherit        = $Inherit.IsPresent
             scopes         = $Scope
             startDate      = $StartDate.ToString('yyyy-MM-dd')
-            stopDate       = $StopDate ? $StopDate.ToString('yyyy-MM-dd') : ""
+            stopDate       = $StopDate ? $StopDate.ToString('yyyy-MM-dd') : ''
             orgUnit        = [PSCustomObject]@{
                 uuid = $OrgUnitUuid
             }
@@ -29,7 +29,7 @@ function Add-RolOrgUnitAssignUserRole {
             }
         }
         
-        if ($PSCmdlet.ShouldProcess("UserRole '$UserRoleId' => OrgUnit '$OrgUnitUuid'", 'Assign')) {
+        if ($PSCmdlet.ShouldProcess(('UserRole ''{0}'' => OrgUnit ''{1}''' -f $UserRoleId, $OrgUnitUuid), 'Assign')) {
             Invoke-ApiClient -Uri $ApiUrl -Method 'POST' -Body ($Request | ConvertTo-Json)
         }
     }

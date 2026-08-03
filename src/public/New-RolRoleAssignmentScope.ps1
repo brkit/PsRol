@@ -32,7 +32,7 @@ function New-RolRoleAssignmentScope {
         switch ($Type) {
             ([PsRolAssignmentScopeType]::TITLE) {
                 if (-not $Title) {
-                    throw "Parameter -Title is required for scope type TITLE."
+                    throw 'Parameter -Title is required for scope type TITLE.'
                 }
                 return [PsRolAssignmentScope]@{
                     type   = $Type
@@ -49,7 +49,7 @@ function New-RolRoleAssignmentScope {
             # I have no idea how this works yet, but should be similar to titles I hope :D
             ([PsRolAssignmentScopeType]::FUNCTION) {
                 if (-not $Functions) {
-                    throw "Parameter -Functions is required for scope type FUNCTION."
+                    throw 'Parameter -Functions is required for scope type FUNCTION.'
                 }
                 return [PsRolAssignmentScope]@{
                     type      = $Type
@@ -58,7 +58,7 @@ function New-RolRoleAssignmentScope {
             }
             ([PsRolAssignmentScopeType]::EXCLUDED_TITLE) {
                 if (-not $ExcludedTitles) {
-                    throw "Parameter -ExcludedTitles is required for scope type EXCLUDED_TITLE."
+                    throw 'Parameter -ExcludedTitles is required for scope type EXCLUDED_TITLE.'
                 }
                 return [PsRolAssignmentScope]@{
                     type           = $Type
@@ -68,7 +68,7 @@ function New-RolRoleAssignmentScope {
             # No idea about this one either, have only seen similar user objects in output from /api/v2/rolegroup/{roleGroupId}/users
             ([PsRolAssignmentScopeType]::EXCEPTED_USER) {
                 if (-not $ExceptedUsers) {
-                    throw "Parameter -ExceptedUsers is required for scope type EXCEPTED_USER."
+                    throw 'Parameter -ExceptedUsers is required for scope type EXCEPTED_USER.'
                 }
                 return [PsRolAssignmentScope]@{
                     type          = $Type

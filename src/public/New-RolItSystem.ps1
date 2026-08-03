@@ -36,7 +36,7 @@ function New-RolItSystem {
         Write-Warning -Message 'Systems of type ''AD'' are paused on creation'
     }
 
-    if ($PSCmdlet.ShouldProcess("ItSystem '$Name' ($SystemIdentifier)", 'Create')) {
+    if ($PSCmdlet.ShouldProcess(('ItSystem ''{0}'' ({1})' -f $Name, $SystemIdentifier), 'Create')) {
         $Response = Invoke-ApiClient -Uri $ApiUrl -Method 'POST' -Body ($Body | ConvertTo-Json -Depth 3)
         return $Response
     }

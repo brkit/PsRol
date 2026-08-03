@@ -49,7 +49,7 @@ function New-RolUserRole {
             approverPermission    = @('INHERIT')  
         }
         
-        if ($PSCmdlet.ShouldProcess("UserRole '$Name' on ItSystem '$ItSystemId'", 'Create')) {
+        if ($PSCmdlet.ShouldProcess(('UserRole ''{0}'' on ItSystem ''{1}''' -f $Name, $ItSystemId), 'Create')) {
             $Response = Invoke-ApiClient -Uri $ApiUrl -Method 'POST' -Body ($Body | ConvertTo-Json -Depth 5)
             return $Response
         }

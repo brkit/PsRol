@@ -35,7 +35,7 @@ function Add-RolItSystemRole {
             supportedConstraintTypes = @()
         }
 
-        if ($PSCmdlet.ShouldProcess("SystemRole '$Name' on ItSystem '$ItSystemId'", 'Create')) {
+        if ($PSCmdlet.ShouldProcess(('SystemRole ''{0}'' on ItSystem ''{1}''' -f $Name, $ItSystemId), 'Create')) {
             $Response = Invoke-ApiClient -Uri $ApiUrl -Method 'POST' -Body ($Body | ConvertTo-Json)
         
             $ReturnObject = [PsRolSystemRole]::new($Response)

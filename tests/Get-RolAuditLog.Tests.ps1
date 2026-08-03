@@ -7,7 +7,7 @@ AfterAll {
     Remove-Module PsRol
 }
 
-Describe "Get-RolAuditLog" {
+Describe 'Get-RolAuditLog' {
     BeforeEach {
         Mock -CommandName Invoke-ApiClient -ModuleName PsRol -MockWith {
             param($Uri, $Method)
@@ -32,7 +32,7 @@ Describe "Get-RolAuditLog" {
         }
     }
 
-    It "Should calculate offset correctly using -Latest" {
+    It 'Should calculate offset correctly using -Latest' {
         $result = Get-RolAuditLog -Latest 5
         Should -Invoke -CommandName Invoke-ApiClient -ModuleName PsRol -Times 1 -ParameterFilter { $Uri -eq '/api/v2/auditlog/head' }
         Should -Invoke -CommandName Invoke-ApiClient -ModuleName PsRol -Times 1 -ParameterFilter { $Uri -eq '/api/v2/auditlog/read?offset=80&size=20' }
@@ -40,7 +40,7 @@ Describe "Get-RolAuditLog" {
         $result[0].Username | Should -Be 'testuser'
     }
 
-    It "Should use default offset and size when -Latest is omitted" {
+    It 'Should use default offset and size when -Latest is omitted' {
         Get-RolAuditLog | Out-Null
         Should -Invoke -CommandName Invoke-ApiClient -ModuleName PsRol -Times 1 -ParameterFilter { $Uri -eq '/api/v2/auditlog/read?offset=0&size=250' }
     }

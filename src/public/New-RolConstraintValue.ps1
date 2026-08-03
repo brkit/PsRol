@@ -15,7 +15,7 @@ function New-RolConstraintValue {
 
     process {
         if ($PSCmdlet.ParameterSetName -eq 'ConstraintTypeId') {
-            $ApiUrlPart = "/api/v2/constraint/$ConstraintTypeId"
+            $ApiUrlPart = '/api/v2/constraint/{0}' -f $ConstraintTypeId
             $ConstraintType = Invoke-ApiClient -Uri $ApiUrlPart -Method GET
         }
         else {
@@ -25,12 +25,12 @@ function New-RolConstraintValue {
         }
 
         if ($null -eq $ConstraintType) {
-            throw "Constraint type not found."
+            throw 'Constraint type not found.'
         }
 
         if (-not [string]::IsNullOrWhiteSpace($ConstraintType.regex)) {
             if ($ConstraintValue -notmatch $ConstraintType.regex) {
-                throw "ConstraintValue '$ConstraintValue' does not match the required format: $($ConstraintType.regex)"
+                throw ('ConstraintValue ''{0}'' does not match the required format: {1}' -f $ConstraintValue, $ConstraintType.regex)
             }
         }
 

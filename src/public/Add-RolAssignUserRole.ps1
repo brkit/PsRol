@@ -47,6 +47,7 @@ function Add-RolAssignUserRole {
         elseif ($isADPrincipal) {
             if ($UserId.objectClass -notcontains 'user') {
                 Write-Warning "Skipping ADPrincipal '$($UserId.SamAccountName)', objectClass must be 'user'."
+                return
             }
             $UserId = $UserId.SamAccountName
         }

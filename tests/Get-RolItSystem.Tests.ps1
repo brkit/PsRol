@@ -33,7 +33,7 @@ Describe 'Get-RolItSystem' {
                     Id = 'system2'
                     name = 'Test System 2'
                     identifier = 'TS2'
-                    systemtype = 'AzureAD'
+                    systemtype = 'SAML'
                     paused = $true
                     hidden = $false
                     readonly = $false

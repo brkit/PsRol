@@ -1,6 +1,7 @@
 # Copyright (c) Bornholms Regionskommune. Licensed under the EUPL
 
 $Script:CacheTimeoutSeconds = 30
+$Script:OrganisationCacheTimeoutSeconds = 300
 
 # Centralised argument completer for Domain parameter
 # By convention domain is either "Administrativt" or "Skole", but is not strictly bound to these values.

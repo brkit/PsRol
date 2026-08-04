@@ -21,4 +21,8 @@ class PsRolRoleGroup {
             }
         }
     }
+
+    [string] ToString() {
+        return $this.Name
+    }
 }

@@ -8,14 +8,27 @@ function Get-RolOrganisation {
     )
 
     process {
-        $ApiUrl = '/api/organisation/v3'
-        $Response = (Invoke-ApiClient -Uri $ApiUrl -Method GET).orgUnits
-        
+        $timeoutSeconds = if ($null -ne $Script:OrganisationCacheTimeoutSeconds) { $Script:OrganisationCacheTimeoutSeconds } else { 300 }
+        $isExpired = ($null -eq $Script:OrganisationCache) -or 
+        ($null -eq $Script:OrganisationCacheTime) -or 
+        ((Get-Date) - $Script:OrganisationCacheTime).TotalSeconds -ge $timeoutSeconds
+
+        if ($isExpired) {
+            $ApiUrl = '/api/organisation/v3'
+            $Response = (Invoke-ApiClient -Uri $ApiUrl -Method GET).orgUnits
+            $Script:OrganisationCache = foreach ($item in $Response) {
+                [PsRolOrganisation]::new($item)
+            }
+            $Script:OrganisationCacheTime = Get-Date
+        }
+
+        $Organisations = $Script:OrganisationCache
+
         if ([string]::IsNullOrWhiteSpace($Name)) {
-            return $Response | ForEach-Object { [PsRolOrganisation]::new($PSItem) }
+            return $Organisations
         }
         else {
-            return $Response | Where-Object { $PSItem.Name -match $Name } | ForEach-Object { [PsRolOrganisation]::new($PSItem) }
+            return $Organisations | Where-Object { $PSItem.Name -match $Name }
         }
     }
 }

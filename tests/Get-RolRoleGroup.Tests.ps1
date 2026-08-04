@@ -41,4 +41,9 @@ Describe 'Get-RolRoleGroup' {
         $result[0].UserRoles.Count | Should -Be 1
         $result[0].UserRoles[0].UserRoleId | Should -Be 'ur1'
     }
+
+    It 'Should return Name when ToString is called on PsRolRoleGroup' {
+        $result = Get-RolRoleGroup
+        $result[0].ToString() | Should -Be 'Test Group 1'
+    }
 }

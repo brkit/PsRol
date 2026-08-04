@@ -52,4 +52,9 @@ Describe 'New-RolRoleAssignmentScope' {
             $scope.exceptedUsers.Count | Should -Be 1
         }
     }
+
+    It 'Should return Type string when ToString is called on PsRolAssignmentScope' {
+        $scope = New-RolRoleAssignmentScope -Type MANAGER -Manager
+        $scope.ToString() | Should -Be 'MANAGER'
+    }
 }

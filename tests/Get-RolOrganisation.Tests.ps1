@@ -9,6 +9,12 @@ AfterAll {
 
 Describe 'Get-RolOrganisation' {
     BeforeEach {
+        & (Get-Module PsRol) {
+            $Script:OrganisationCache = $null
+            $Script:OrganisationCacheTime = $null
+            $Script:OrganisationCacheTimeoutSeconds = 300
+        }
+
         Mock -CommandName Invoke-ApiClient -ModuleName PsRol -MockWith {
             return [PSCustomObject]@{
                 orgUnits = @(
@@ -54,5 +60,42 @@ Describe 'Get-RolOrganisation' {
 
         $result.Count | Should -Be 1
         $result[0].Name | Should -Be 'IT Afdeling'
+    }
+
+    It 'Should cache results on subsequent calls within timeout and not call API again' {
+        $result1 = Get-RolOrganisation
+        $result2 = Get-RolOrganisation
+
+        Should -Invoke -CommandName Invoke-ApiClient -ModuleName PsRol -Times 1
+        $result1.Count | Should -Be 2
+        $result2.Count | Should -Be 2
+    }
+
+    It 'Should refresh cache after cache timeout expires' {
+        $result1 = Get-RolOrganisation
+
+        & (Get-Module PsRol) {
+            $Script:OrganisationCacheTime = (Get-Date).AddSeconds(-301)
+        }
+
+        $result2 = Get-RolOrganisation
+
+        Should -Invoke -CommandName Invoke-ApiClient -ModuleName PsRol -Times 2
+    }
+
+    It 'Should respect module author configured OrganisationCacheTimeoutSeconds' {
+        & (Get-Module PsRol) {
+            $Script:OrganisationCacheTimeoutSeconds = 10
+        }
+
+        $result1 = Get-RolOrganisation
+
+        & (Get-Module PsRol) {
+            $Script:OrganisationCacheTime = (Get-Date).AddSeconds(-11)
+        }
+
+        $result2 = Get-RolOrganisation
+
+        Should -Invoke -CommandName Invoke-ApiClient -ModuleName PsRol -Times 2
     }
 }

@@ -35,18 +35,21 @@ function Get-RolItSystem {
     }
 
     if (-not [string]::IsNullOrEmpty($Name)) {
-        $itSystems = $itSystems.PSWhere({ $PSItem.Name -match $Name })
+        $itSystems = $itSystems.PSWhere({ $PSItem.Name -like $Name })
     }
 
     if (-not [string]::IsNullOrEmpty($Identifier)) {
-        $itSystems = $itSystems.PSWhere({ $PSItem.identifier -match $Identifier })
+        $itSystems = $itSystems.PSWhere({ $PSItem.identifier -like $Identifier })
     }
 
     $ReturnObject = foreach ($itSystem in $itSystems) { 
         [PsRolItSystem]::new($itSystem)
     }
 
-    Set-DefaultDisplayPropertySet -InputObject $ReturnObject -Properties 'ItSystemId', 'Name', 'Identifier', 'SystemType'
+    if ($null -ne $ReturnObject) {
+        Set-DefaultDisplayPropertySet -InputObject $ReturnObject -Properties 'ItSystemId', 'Name', 'Identifier', 'SystemType'
+        return $ReturnObject
+    }
 
-    return $ReturnObject
+    return $null
 }

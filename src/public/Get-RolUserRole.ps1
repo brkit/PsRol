@@ -19,8 +19,11 @@ function Get-RolUserRole {
             $UserRoles = foreach ($UserRoleInResponse in @($Response)) {
                 [PsRolUserRole]::new($UserRoleInResponse)
             }
-            Set-DefaultDisplayPropertySet -InputObject $UserRoles -Properties 'UserRoleId', 'Name', 'Description'
-            return $UserRoles
+            if ($null -ne $UserRoles) {
+                Set-DefaultDisplayPropertySet -InputObject $UserRoles -Properties 'UserRoleId', 'Name', 'Description'
+                return $UserRoles
+            }
+            return $null
         }
 
         $timeoutSeconds = if ($null -ne $Script:CacheTimeoutSeconds) { $Script:CacheTimeoutSeconds } else { 30 }
@@ -43,10 +46,11 @@ function Get-RolUserRole {
         if (-not [string]::IsNullOrWhiteSpace($Name)) {
             $UserRoles = $UserRoles | Where-Object { $PSItem.Name -Like $Name }
         }
+        if ($null -ne $UserRoles) {
+            Set-DefaultDisplayPropertySet -InputObject $UserRoles -Properties 'UserRoleId', 'Name', 'Description'
+            return $UserRoles
+        }
 
-        Set-DefaultDisplayPropertySet -InputObject $UserRoles -Properties 'UserRoleId', 'Name', 'Description'
-
-        return $UserRoles
+        return $null
     }
-
 }

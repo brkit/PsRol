@@ -6,6 +6,8 @@ class PsRolRoleGroup {
     [bool]$UsersOnly
     [bool]$CanRequest
     [PsRolRoleGroupUserRole[]]$UserRoles
+    [PsRolApproverPermission[]]$ApproverPermission
+    [PsRolRequesterPermission[]]$RequesterPermission
 
     PsRolRoleGroup() {}
 
@@ -18,6 +20,16 @@ class PsRolRoleGroup {
         if ($obj.userRoles) {
             $this.UserRoles = foreach ($ur in $obj.userRoles) {
                 [PsRolRoleGroupUserRole]::new($ur)
+            }
+        }
+        if ($obj.approverPermission) {
+            $this.ApproverPermission = foreach ($ap in $obj.approverPermission) {
+                [PsRolApproverPermission]$ap
+            }
+        }
+        if ($obj.requesterPermission) {
+            $this.RequesterPermission = foreach ($rp in $obj.requesterPermission) {
+                [PsRolRequesterPermission]$rp
             }
         }
     }

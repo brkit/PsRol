@@ -7,8 +7,8 @@ function Add-RolItSystemRole {
         [string]$ItSystemId,
         [Parameter(Mandatory)]
         [string]$Name,
-        [Parameter(Mandatory)]
-        [string]$Identifier,
+        [Parameter(Mandatory=$false)]
+        [string]$Identifier = ('id-{0}' -f [Guid]::NewGuid().Guid),
         [string]$Description,
         [int]$Weight = 1
     )
